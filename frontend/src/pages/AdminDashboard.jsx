@@ -65,19 +65,38 @@ const AdminDashboard = () => {
   const fetchAdminData = async () => {
     try {
       setLoading(true);
-      const results = await Promise.allSettled([
-        API.get('/admin/dashboard'),
+      // The dashboard summary is enough to display the page shell. Load the
+      // larger tables alongside it without making navigation wait for all five APIs.
+      const dashboardRequest = API.get('/admin/dashboard').then(response => {
+        const summary = response.data?.stats || {};
+        setStats(current => ({
+          ...current,
+          totalFarmers: summary.totalFarmers ?? current.totalFarmers,
+          totalCustomers: summary.totalCustomers ?? current.totalCustomers,
+          totalVegetables: summary.totalVegetables ?? current.totalVegetables,
+          totalOrders: summary.totalOrders ?? current.totalOrders,
+          pendingDeliveries: summary.pendingDeliveries ?? current.pendingDeliveries,
+          totalRevenue: summary.totalRevenue ?? current.totalRevenue
+        }));
+        return response;
+      }).catch(error => {
+        console.error('Error loading admin summary:', error);
+        return null;
+      }).finally(() => setLoading(false));
+
+      const listsRequest = Promise.allSettled([
         API.get('/admin/farmers'),
         API.get('/admin/customers'),
         API.get('/admin/vegetables'),
         API.get('/admin/orders')
       ]);
+      const [dashRes, listResults] = await Promise.all([dashboardRequest, listsRequest]);
 
-      const dashRes = results[0].status === 'fulfilled' ? results[0].value.data : null;
-      const farmRes = results[1].status === 'fulfilled' ? results[1].value.data : [];
-      const custRes = results[2].status === 'fulfilled' ? results[2].value.data : [];
-      const vegRes = results[3].status === 'fulfilled' ? results[3].value.data : [];
-      const ordRes = results[4].status === 'fulfilled' ? results[4].value.data : [];
+      const dashData = dashRes?.data || null;
+      const farmRes = listResults[0].status === 'fulfilled' ? listResults[0].value.data : [];
+      const custRes = listResults[1].status === 'fulfilled' ? listResults[1].value.data : [];
+      const vegRes = listResults[2].status === 'fulfilled' ? listResults[2].value.data : [];
+      const ordRes = listResults[3].status === 'fulfilled' ? listResults[3].value.data : [];
 
       setFarmers(farmRes);
       setCustomers(custRes);
@@ -88,12 +107,12 @@ const AdminDashboard = () => {
       const totalRev = ordRes.filter(o => o.status !== 'Cancelled').reduce((sum, o) => sum + parseFloat(o.total_amount || 0), 0);
 
       setStats({
-        totalFarmers: dashRes?.stats?.totalFarmers || farmRes.length,
-        totalCustomers: dashRes?.stats?.totalCustomers || custRes.length,
-        totalVegetables: dashRes?.stats?.totalVegetables || vegRes.length,
-        totalOrders: dashRes?.stats?.totalOrders || ordRes.length,
-        pendingDeliveries: dashRes?.stats?.pendingDeliveries || pendingCount,
-        totalRevenue: dashRes?.stats?.totalRevenue || totalRev
+        totalFarmers: dashData?.stats?.totalFarmers ?? farmRes.length,
+        totalCustomers: dashData?.stats?.totalCustomers ?? custRes.length,
+        totalVegetables: dashData?.stats?.totalVegetables ?? vegRes.length,
+        totalOrders: dashData?.stats?.totalOrders ?? ordRes.length,
+        pendingDeliveries: dashData?.stats?.pendingDeliveries ?? pendingCount,
+        totalRevenue: dashData?.stats?.totalRevenue ?? totalRev
       });
     } catch (err) {
       console.error('Error loading admin data:', err);
@@ -147,7 +166,7 @@ const AdminDashboard = () => {
     fetchAdminData();
     const interval = setInterval(() => {
       fetchAdminDataSilently();
-    }, 2000);
+    }, 30000);
     return () => clearInterval(interval);
   }, [i18n]);
 
