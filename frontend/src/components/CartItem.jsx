@@ -2,6 +2,7 @@ import React, { useContext } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Plus, Minus, Trash2, User } from 'lucide-react';
 import { CartContext } from '../context/CartContext';
+import { getImageUrl } from '../utils/imageUrl';
 
 const CartItem = ({ item }) => {
   const { t } = useTranslation();
@@ -47,9 +48,7 @@ const CartItem = ({ item }) => {
     }
   };
 
-  const imageUrl = item.image && item.image.startsWith('http')
-    ? item.image
-    : `/uploads/${item.image || 'default-vegetable.jpg'}`;
+  const imageUrl = getImageUrl(item.image);
 
   const lineTotal = item.item_total !== undefined
     ? item.item_total

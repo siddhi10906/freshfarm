@@ -5,6 +5,7 @@ import { ArrowLeft, Star, MessageSquare, User, Calendar, TrendingUp } from 'luci
 import StarRating from '../components/StarRating';
 import LoadingSpinner from '../components/LoadingSpinner';
 import API from '../services/api';
+import { getImageUrl } from '../utils/imageUrl';
 
 const ProductReviewsPage = () => {
     const { id } = useParams();
@@ -85,7 +86,7 @@ const ProductReviewsPage = () => {
             {vegetable && (
                 <div className="card" style={{ padding: '24px', marginBottom: '24px', display: 'flex', alignItems: 'center', gap: '20px' }}>
                     <img
-                        src={vegetable.image?.startsWith('http') ? vegetable.image : `/uploads/${vegetable.image || 'default-vegetable.jpg'}`}
+                        src={getImageUrl(vegetable.image)}
                         alt={vegetable.vegetable_name}
                         onError={e => { e.target.src = 'https://images.unsplash.com/photo-1540420773420-3366772f4999?w=200&q=80'; }}
                         style={{ width: '72px', height: '72px', borderRadius: '14px', objectFit: 'cover', flexShrink: 0 }}

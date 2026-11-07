@@ -7,6 +7,7 @@ import { tVegName } from '../utils/i18nHelpers';
 import { AuthContext } from '../context/AuthContext';
 import ReviewModal from './ReviewModal';
 import API from '../services/api';
+import { getImageUrl } from '../utils/imageUrl';
 
 const OrderCard = ({ order, isFarmer = false }) => {
   const { t } = useTranslation();
@@ -109,7 +110,7 @@ const OrderCard = ({ order, isFarmer = false }) => {
                 <div key={idx} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', fontSize: '0.9rem', gap: '8px', flexWrap: 'wrap' }}>
                   <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
                     <img
-                      src={item.image && item.image.startsWith('http') ? item.image : `/uploads/${item.image || 'default-vegetable.jpg'}`}
+                      src={getImageUrl(item.image)}
                       alt={item.vegetable_name}
                       onError={(e) => { e.target.src = 'https://images.unsplash.com/photo-1540420773420-3366772f4999?w=500&auto=format&fit=crop&q=60'; }}
                       style={{ width: '40px', height: '40px', borderRadius: '6px', objectFit: 'cover' }}

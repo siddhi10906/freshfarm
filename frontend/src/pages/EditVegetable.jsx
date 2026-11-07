@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate, useParams, Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import API from '../services/api';
+import { getImageUrl } from '../utils/imageUrl';
 import LoadingSpinner from '../components/LoadingSpinner';
 import { Sprout, Save, ArrowLeft } from 'lucide-react';
 
@@ -45,7 +46,7 @@ const EditVegetable = () => {
           quantity: res.data.quantity,
           sold_by: res.data.sold_by || 'weight'
         });
-        setImagePreview(res.data.image && res.data.image.startsWith('http') ? res.data.image : `/uploads/${res.data.image}`);
+        setImagePreview(getImageUrl(res.data.image));
       } catch (err) {
         setError('Failed to fetch vegetable details.');
       } finally {

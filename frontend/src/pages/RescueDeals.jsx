@@ -2,6 +2,7 @@ import React, { useEffect, useState, useContext } from 'react';
 import { Link } from 'react-router-dom';
 import API from '../services/api';
 import { CartContext } from '../context/CartContext';
+import { getImageUrl } from '../utils/imageUrl';
 
 const RescueDeals = () => {
   const [deals,setDeals]=useState([]); const [message,setMessage]=useState(''); const {fetchCart}=useContext(CartContext);
@@ -11,7 +12,7 @@ const RescueDeals = () => {
     {!deals.length&&!message&&<p>No active Rescue Deals are available near you right now.</p>}
     <div style={{display:'grid',gridTemplateColumns:'repeat(auto-fit,minmax(250px,1fr))',gap:18}}>{deals.map(d=><article key={d.listing_id} style={{border:'1px solid #dbe5e9',borderRadius:14,padding:18,background:'#fff'}}>
       <span style={{display:'inline-block',background:'#fff2cf',color:'#8a4b00',fontWeight:800,padding:'5px 10px',borderRadius:20}}>Rescue Deal</span>
-      {d.image&&<img src={d.image.startsWith('http')||d.image.startsWith('/')?d.image:`/uploads/${d.image}`} alt="" style={{width:'100%',height:150,objectFit:'cover',borderRadius:10,marginTop:12}}/>}
+      {d.image&&<img src={getImageUrl(d.image)} alt="" style={{width:'100%',height:150,objectFit:'cover',borderRadius:10,marginTop:12}}/>}
       <h3>{d.vegetable_name}</h3><p>{d.farmer_name} · {d.locality}</p><p><s>₹{d.original_price}/{d.sold_by==='piece'?'piece':'kg'}</s> <b style={{color:'#087443'}}>₹{d.discounted_price}/{d.sold_by==='piece'?'piece':'kg'}</b></p>
       <p>Available: {Number(d.quantity_remaining)} {d.sold_by==='piece'?'pieces':'kg'}</p><p>Unsold deadline: {new Date(d.deadline).toLocaleString()}</p>
       <button className="btn btn-primary" style={{background:'#0B6B3A'}} onClick={()=>add(d)}>Add 1 {d.sold_by==='piece'?'piece':'kg'} to cart</button>
