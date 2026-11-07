@@ -1,0 +1,35 @@
+{
+  "name": "freshfarm-backend",
+  "version": "1.0.0",
+  "description": "FreshFarm Online Vegetable Marketplace & Delivery System Backend API",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node --watch server.js",
+    "migrate:reviews": "node add_reviews_migration.js",
+    "migrate:razorpay": "node migrate_razorpay.js",
+    "migrate:rescue": "node migrate_rescue_network.js"
+  },
+  "keywords": [
+    "express",
+    "mysql",
+    "freshfarm",
+    "gemini-ai",
+    "jwt",
+    "vit-pune"
+  ],
+  "author": "VIT Pune Student",
+  "license": "ISC",
+  "dependencies": {
+    "@google/genai": "^2.21.0",
+    "@google/generative-ai": "^0.21.0",
+    "axios": "^1.20.0",
+    "bcryptjs": "^2.4.3",
+    "cors": "^2.8.5",
+    "dotenv": "^16.6.1",
+    "express": "^4.19.2",
+    "jsonwebtoken": "^9.0.2",
+    "multer": "^1.4.5-lts.1",
+    "mysql2": "^3.9.7"
+  }
+}
