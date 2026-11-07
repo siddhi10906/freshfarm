@@ -3,6 +3,7 @@ import { Link, useSearchParams } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { AuthContext } from '../context/AuthContext';
 import API from '../services/api';
+import { getImageUrl } from '../utils/imageUrl';
 import LoadingSpinner from '../components/LoadingSpinner';
 import { tVegName, tCategory } from '../utils/i18nHelpers';
 import {
@@ -72,7 +73,7 @@ const getVegImageUrl = (veg) => {
     return 'https://images.unsplash.com/photo-1563565375-f3fdfdbefa83?w=400&auto=format&fit=crop&q=80';
   }
   if (img && !img.includes('default')) {
-    return `/uploads/${img}`;
+    return getImageUrl(img);
   }
   return '/assets/images/produce/bhindi_exact.png';
 };

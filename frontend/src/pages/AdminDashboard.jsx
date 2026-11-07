@@ -5,6 +5,7 @@ import { AuthContext } from '../context/AuthContext';
 import API from '../services/api';
 import LoadingSpinner from '../components/LoadingSpinner';
 import { tVegName, tCategory } from '../utils/i18nHelpers';
+import { getImageUrl } from '../utils/imageUrl';
 import {
   LayoutDashboard,
   Users,
@@ -943,17 +944,11 @@ const AdminDashboard = () => {
                         <td style={{ fontWeight: '800', color: '#0f172a' }}>
                           <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
                             <img
-                              src={
-                                !veg.image
-                                  ? '/assets/images/produce/tomatoes.jpg'
-                                  : veg.image.startsWith('http') || veg.image.startsWith('data:') || veg.image.startsWith('/')
-                                    ? veg.image
-                                    : `/assets/images/produce/${veg.image}`
-                              }
+                              src={getImageUrl(veg.image, '/assets/images/produce/tomatoes.jpg')}
                               alt={veg.vegetable_name}
                               onError={(e) => {
                                 e.target.onerror = null;
-                                e.target.src = veg.image ? `/uploads/${veg.image}` : 'https://images.unsplash.com/photo-1592924357228-91a4daadcfea?w=200&auto=format&fit=crop&q=80';
+                                e.target.src = getImageUrl(veg.image, 'https://images.unsplash.com/photo-1592924357228-91a4daadcfea?w=200&auto=format&fit=crop&q=80');
                               }}
                               style={{ width: '42px', height: '42px', borderRadius: '10px', objectFit: 'cover', border: '1px solid #cbd5e1' }}
                             />

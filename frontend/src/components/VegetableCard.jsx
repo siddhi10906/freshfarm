@@ -6,6 +6,7 @@ import { tVegName } from '../utils/i18nHelpers';
 import { CartContext } from '../context/CartContext';
 import { AuthContext } from '../context/AuthContext';
 import { useNavigate, Link } from 'react-router-dom';
+import { getImageUrl } from '../utils/imageUrl';
 
 const VegetableCard = ({ vegetable }) => {
   const { t } = useTranslation();
@@ -114,11 +115,7 @@ const VegetableCard = ({ vegetable }) => {
       return '/assets/images/produce/bhindi_exact.png';
     }
     const img = veg.image || '';
-    if (img.startsWith('http') || img.startsWith('data:')) {
-      return img;
-    }
-    if (img.startsWith('/')) return img;
-    return `/assets/images/produce/${img}`;
+    return getImageUrl(img);
   };
 
   const imageUrl = getCardImageUrl(vegetable);
