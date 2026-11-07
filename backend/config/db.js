@@ -9,6 +9,9 @@ const pool = mysql.createPool({
     password: process.env.DB_PASSWORD || '',
     database: process.env.DB_NAME || 'freshfarm_db',
     port: process.env.DB_PORT || 3306,
+    // TiDB Cloud public endpoints require TLS. Keep it opt-in so local MySQL
+    // development continues to use its existing connection settings.
+    ...(process.env.DB_SSL === 'true' ? { ssl: { rejectUnauthorized: true } } : {}),
     waitForConnections: true,
     connectionLimit: 10,
     queueLimit: 0
