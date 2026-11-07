@@ -143,20 +143,25 @@ exports.createOrder = async (req, res) => {
 exports.getCustomerOrders = async (req, res) => {
     try {
         const customer_id = req.user.id;
-        // Use a subquery to get only the LATEST delivery_status row per order.
-        // Without this, orders with multiple status history rows (e.g. full trail) appear duplicated.
+        // Rank status history rows so MySQL and TiDB can both select the latest
+        // status without a correlated subquery in a JOIN condition.
         const [orders] = await db.query(
             `SELECT o.*,
                     ds.current_status AS tracking_status,
                     ds.updated_at     AS last_updated
              FROM orders o
-             LEFT JOIN delivery_status ds
-               ON ds.delivery_id = (
-                   SELECT delivery_id FROM delivery_status
-                   WHERE order_id = o.order_id
-                   ORDER BY updated_at DESC
-                   LIMIT 1
-               )
+             LEFT JOIN (
+                 SELECT order_id, current_status, updated_at
+                 FROM (
+                     SELECT order_id, current_status, updated_at,
+                            ROW_NUMBER() OVER (
+                                PARTITION BY order_id
+                                ORDER BY updated_at DESC, delivery_id DESC
+                            ) AS row_num
+                     FROM delivery_status
+                 ) ranked_delivery_status
+                 WHERE row_num = 1
+             ) ds ON ds.order_id = o.order_id
              WHERE o.customer_id = ?
              ORDER BY o.order_date DESC`,
             [customer_id]
@@ -191,13 +196,18 @@ exports.getOrderById = async (req, res) => {
                     ds.current_status AS tracking_status, ds.updated_at AS last_updated
              FROM orders o
              JOIN customers c ON o.customer_id = c.customer_id
-             LEFT JOIN delivery_status ds
-               ON ds.delivery_id = (
-                   SELECT delivery_id FROM delivery_status
-                   WHERE order_id = o.order_id
-                   ORDER BY updated_at DESC
-                   LIMIT 1
-               )
+             LEFT JOIN (
+                 SELECT order_id, current_status, updated_at
+                 FROM (
+                     SELECT order_id, current_status, updated_at,
+                            ROW_NUMBER() OVER (
+                                PARTITION BY order_id
+                                ORDER BY updated_at DESC, delivery_id DESC
+                            ) AS row_num
+                     FROM delivery_status
+                 ) ranked_delivery_status
+                 WHERE row_num = 1
+             ) ds ON ds.order_id = o.order_id
              WHERE o.order_id = ?`,
             [id]
         );
