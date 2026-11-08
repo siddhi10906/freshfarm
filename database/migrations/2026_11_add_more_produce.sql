@@ -19,19 +19,19 @@ CROSS JOIN (
            32.00, 38, '/assets/images/produce/cabbage.png', 'suresh.deshmukh@freshfarm.com'
     UNION ALL SELECT 'Earthy Beetroot', 'Root Vegetables',
            'Naturally sweet beetroot, freshly harvested.',
-           45.00, 30, '/assets/images/produce/carrots.jpg', 'ramesh.patil@freshfarm.com'
+           45.00, 30, '/assets/images/produce/beetroot.jpg', 'ramesh.patil@freshfarm.com'
     UNION ALL SELECT 'Crisp Red Apples', 'Fruits',
            'Sweet and crisp apples for a fresh daily snack.',
-           160.00, 35, '/assets/images/produce/fruit-basket.png', 'ramesh.patil@freshfarm.com'
+           160.00, 35, '/assets/images/produce/apples.jpg', 'ramesh.patil@freshfarm.com'
     UNION ALL SELECT 'Fresh Bananas', 'Fruits',
            'Naturally sweet bananas sourced from trusted growers.',
-           60.00, 50, '/assets/images/produce/fruit-basket.png', 'anil.shinde@freshfarm.com'
+           60.00, 50, '/assets/images/produce/bananas.jpg', 'anil.shinde@freshfarm.com'
     UNION ALL SELECT 'Juicy Oranges', 'Fruits',
            'Bright, juicy oranges packed with a refreshing citrus taste.',
-           85.00, 40, '/assets/images/produce/fruit-basket.png', 'anil.shinde@freshfarm.com'
+           85.00, 40, '/assets/images/produce/oranges.jpg', 'anil.shinde@freshfarm.com'
     UNION ALL SELECT 'Sweet Pomegranates', 'Fruits',
            'Fresh pomegranates with juicy ruby-red seeds.',
-           140.00, 25, '/assets/images/produce/fruit-basket.png', 'anil.shinde@freshfarm.com'
+           140.00, 25, '/assets/images/produce/pomegranate.jpg', 'anil.shinde@freshfarm.com'
 ) p
 WHERE LOWER(f.email) = LOWER(p.farmer_email)
   AND NOT EXISTS (
@@ -45,9 +45,11 @@ SET image = CASE
     WHEN vegetable_name = 'Fresh Lady Finger (Bhindi)' THEN '/assets/images/produce/bhindi_exact.png'
     WHEN vegetable_name = 'Farm Fresh Cucumbers' THEN '/assets/images/produce/cucumber.png'
     WHEN vegetable_name = 'Fresh Green Cabbage' THEN '/assets/images/produce/cabbage.png'
-    WHEN vegetable_name = 'Earthy Beetroot' THEN '/assets/images/produce/carrots.jpg'
-    WHEN vegetable_name IN ('Crisp Red Apples', 'Fresh Bananas', 'Juicy Oranges', 'Sweet Pomegranates')
-      THEN '/assets/images/produce/fruit-basket.png'
+    WHEN vegetable_name = 'Earthy Beetroot' THEN '/assets/images/produce/beetroot.jpg'
+    WHEN vegetable_name = 'Crisp Red Apples' THEN '/assets/images/produce/apples.jpg'
+    WHEN vegetable_name = 'Fresh Bananas' THEN '/assets/images/produce/bananas.jpg'
+    WHEN vegetable_name = 'Juicy Oranges' THEN '/assets/images/produce/oranges.jpg'
+    WHEN vegetable_name = 'Sweet Pomegranates' THEN '/assets/images/produce/pomegranate.jpg'
     ELSE image
 END
 WHERE vegetable_name IN (
