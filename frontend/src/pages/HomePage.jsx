@@ -132,7 +132,7 @@ const HomePage = () => {
       
       {/* 1. HERO BANNER - FULL-WIDTH 100% VIEWPORT COVERAGE */}
       <section className="container" style={{ paddingTop: '24px', paddingBottom: '36px' }}>
-        <div style={{
+        <div className="home-hero-layout" style={{
           background: 'linear-gradient(180deg, #ffffff 0%, #f4fbf6 100%)',
           borderRadius: '24px',
           padding: '48px 60px',
@@ -147,18 +147,18 @@ const HomePage = () => {
         }}>
 
           {/* Left Side Content */}
-          <div>
-            <h1 style={{ fontSize: '2.85rem', fontWeight: '800', lineHeight: '1.18', marginBottom: '16px', letterSpacing: '-0.5px', color: '#1e293b', fontFamily: 'Poppins' }}>
+          <div className="home-hero-content">
+            <h1 className="home-hero-title" style={{ fontSize: '2.85rem', fontWeight: '800', lineHeight: '1.18', marginBottom: '16px', letterSpacing: '-0.5px', color: '#1e293b', fontFamily: 'Poppins' }}>
               {t('hero.title1')} <br />
               <span style={{ color: '#0B6B3A' }}>{t('hero.title2')}</span>
             </h1>
 
-            <p style={{ fontSize: '1.15rem', color: '#475569', marginBottom: '30px', lineHeight: '1.6' }}>
+            <p className="home-hero-subtitle" style={{ fontSize: '1.15rem', color: '#475569', marginBottom: '30px', lineHeight: '1.6' }}>
               {t('hero.subtitle')}
             </p>
 
             {/* 3 Feature Circles */}
-            <div style={{ display: 'flex', gap: '24px', flexWrap: 'wrap', marginBottom: '36px' }}>
+            <div className="home-hero-features" style={{ display: 'flex', gap: '24px', flexWrap: 'wrap', marginBottom: '36px' }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
                 <div style={{ background: '#e6f4ea', width: '44px', height: '44px', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#0B6B3A' }}>
                   <Leaf size={20} />
@@ -191,7 +191,7 @@ const HomePage = () => {
             </div>
 
             {/* 2 CTA Buttons */}
-            <div style={{ display: 'flex', gap: '18px' }}>
+            <div className="home-hero-actions" style={{ display: 'flex', gap: '18px' }}>
               <Link to="/vegetables" className="btn" style={{ background: '#0B6B3A', color: 'white', padding: '14px 38px', borderRadius: '12px', fontSize: '1rem', fontWeight: '700', boxShadow: '0 4px 14px rgba(11, 107, 58, 0.3)', display: 'flex', alignItems: 'center', gap: '8px' }}>
                 <ShoppingBag size={18} /> {t('hero.shopNow')}
               </Link>
@@ -212,10 +212,10 @@ const HomePage = () => {
           </div>
 
           {/* Right Side Image & Dashed Pill Badge */}
-          <div style={{ position: 'relative', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+          <div className="home-hero-artwork" style={{ position: 'relative', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
             
             {/* Supporting Our Farmers Pill */}
-            <div style={{
+            <div className="home-hero-badge" style={{
               position: 'absolute',
               top: '10px',
               left: '20px',
@@ -236,7 +236,7 @@ const HomePage = () => {
             </div>
 
             {/* Mint Backdrop Shape */}
-            <div style={{
+            <div className="home-hero-backdrop" style={{
               position: 'absolute',
               width: '480px',
               height: '360px',
@@ -249,6 +249,7 @@ const HomePage = () => {
 
             {/* Wicker Produce Basket Image */}
             <img
+              className="home-hero-image"
               src="/assets/images/hero_basket_produce.png"
               alt="Fresh Organic Produce Basket"
               style={{

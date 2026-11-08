@@ -303,6 +303,48 @@ body {
 
 .mobile-menu-toggle { display: none; }
 
+@media (max-width: 1024px) {
+  .home-hero-layout {
+    grid-template-columns: minmax(0, 1fr) !important;
+    gap: 12px !important;
+    padding: 34px 32px !important;
+  }
+  .home-hero-content { min-width: 0; width: 100%; }
+  .home-hero-title {
+    max-width: 15ch;
+    font-size: clamp(2.25rem, 6.5vw, 3rem) !important;
+    line-height: 1.08 !important;
+  }
+  .home-hero-artwork {
+    width: 100%;
+    min-height: 230px;
+    max-height: 300px;
+    margin-top: 6px;
+  }
+  .home-hero-image {
+    width: 100% !important;
+    max-width: 520px !important;
+    height: 260px !important;
+    object-fit: contain !important;
+  }
+  .home-hero-backdrop {
+    width: min(86%, 430px) !important;
+    height: 220px !important;
+    top: 10px !important;
+    right: 7% !important;
+  }
+  .home-hero-badge {
+    top: 10px !important;
+    left: auto !important;
+    right: 10px !important;
+    max-width: calc(100% - 20px);
+    padding: 8px 12px !important;
+    font-size: 0.76rem !important;
+    white-space: nowrap;
+  }
+  #category-section { padding-top: 42px !important; }
+}
+
 @media (max-width: 900px) {
   .customer-navbar-main {
     flex-wrap: wrap !important;
@@ -373,6 +415,14 @@ body {
   .section-title { font-size: clamp(1.5rem, 7vw, 2.3rem) !important; }
   .section-subtitle { font-size: 0.95rem !important; }
   .auth-card-clean { padding: 26px 20px; }
+  .home-hero-layout { padding: 28px 24px !important; }
+  .home-hero-features {
+    display: grid !important;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 14px !important;
+    margin-bottom: 24px !important;
+  }
+  .home-hero-actions { flex-wrap: wrap; gap: 10px !important; }
 }
 
 @media (max-width: 520px) {
@@ -385,4 +435,15 @@ body {
   .vegetable-list-layout { min-width: 0; }
   .vegetable-product-grid > * { min-width: 0; }
   .auth-wrapper { padding: 24px 12px; }
+  .home-hero-layout { padding: 24px 18px !important; border-radius: 18px !important; }
+  .home-hero-title { font-size: clamp(2rem, 9vw, 2.55rem) !important; margin-bottom: 12px !important; }
+  .home-hero-subtitle { font-size: 1rem !important; margin-bottom: 20px !important; }
+  .home-hero-features { gap: 12px 8px !important; }
+  .home-hero-features > div { gap: 7px !important; }
+  .home-hero-features > div > div:first-child { width: 38px !important; height: 38px !important; flex: 0 0 38px; }
+  .home-hero-actions { flex-direction: column; }
+  .home-hero-actions > * { width: 100%; justify-content: center; padding: 12px 14px !important; }
+  .home-hero-artwork { min-height: 190px; max-height: 230px; }
+  .home-hero-image { height: 210px !important; }
+  .home-hero-backdrop { height: 175px !important; }
 }
