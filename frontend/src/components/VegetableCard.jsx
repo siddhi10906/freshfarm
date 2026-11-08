@@ -25,15 +25,15 @@ const VegetableCard = ({ vegetable }) => {
   const [weightGrams, setWeightGrams] = useState(500);
   // Piece-based: steps by 1 piece, minimum 1 piece, default 1 piece
   const [pieceCount, setPieceCount] = useState(1);
-  const [dozenCount, setDozenCount] = useState(1);
+  const [dozenCount, setDozenCount] = useState(0.5);
 
   const availableStock = parseFloat(vegetable.quantity) || 100;
   const maxGrams = availableStock * 1000;
   const maxPieces = availableStock;
   const maxDozens = availableStock;
 
-  const isMinDisabled = soldBy === 'piece' ? pieceCount <= 1 : soldBy === 'dozen' ? dozenCount <= 1 : weightGrams <= 250;
-  const isMaxDisabled = soldBy === 'piece' ? pieceCount >= maxPieces : soldBy === 'dozen' ? dozenCount >= maxDozens : (weightGrams + 250 > maxGrams);
+  const isMinDisabled = soldBy === 'piece' ? pieceCount <= 1 : soldBy === 'dozen' ? dozenCount <= 0.5 : weightGrams <= 250;
+  const isMaxDisabled = soldBy === 'piece' ? pieceCount >= maxPieces : soldBy === 'dozen' ? dozenCount + 0.5 > maxDozens : (weightGrams + 250 > maxGrams);
 
   const handleDecrease = (e) => {
     e.stopPropagation();
@@ -42,7 +42,7 @@ const VegetableCard = ({ vegetable }) => {
         setPieceCount(prev => prev - 1);
       }
     } else if (soldBy === 'dozen') {
-      if (dozenCount > 1) setDozenCount(prev => prev - 1);
+      if (dozenCount > 0.5) setDozenCount(prev => Number((prev - 0.5).toFixed(2)));
     } else {
       if (weightGrams > 250) {
         setWeightGrams(prev => prev - 250);
@@ -57,7 +57,7 @@ const VegetableCard = ({ vegetable }) => {
         setPieceCount(prev => prev + 1);
       }
     } else if (soldBy === 'dozen') {
-      if (dozenCount < maxDozens) setDozenCount(prev => prev + 1);
+      if (dozenCount + 0.5 <= maxDozens) setDozenCount(prev => Number((prev + 0.5).toFixed(2)));
     } else {
       if (weightGrams + 250 <= maxGrams) {
         setWeightGrams(prev => prev + 250);

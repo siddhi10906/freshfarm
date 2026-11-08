@@ -17,6 +17,8 @@ const CartItem = ({ item }) => {
     let nextUnit = unit;
     if (unit === 'g') {
       nextVal = val + 250;
+    } else if (unit === 'dozen') {
+      nextVal = Number((val + 0.5).toFixed(2));
     } else {
       nextVal = val + 1;
     }
@@ -36,6 +38,8 @@ const CartItem = ({ item }) => {
     let nextUnit = unit;
     if (unit === 'g') {
       nextVal = val - 250;
+    } else if (unit === 'dozen') {
+      nextVal = Number((val - 0.5).toFixed(2));
     } else {
       nextVal = val - 1;
     }

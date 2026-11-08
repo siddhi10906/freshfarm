@@ -19,9 +19,9 @@ const RescueDeals = () => {
   const add = async deal => {
     try {
       await API.post(`/cart/rescue/${deal.listing_id}`, {
-        quantity: 1,
+        quantity: deal.sold_by === 'dozen' ? 0.5 : 1,
         quantity_unit: deal.sold_by === 'piece' || deal.sold_by === 'dozen' ? deal.sold_by : 'kg',
-        quantity_value: 1
+        quantity_value: deal.sold_by === 'dozen' ? 0.5 : 1
       });
       await fetchCart();
       setMessage(`${deal.vegetable_name} added to your cart.`);

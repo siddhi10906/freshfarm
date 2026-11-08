@@ -84,7 +84,7 @@ const OrderHistory = () => {
     setEditItems(prev => [...prev, {
       vegetable_id: product.vegetable_id,
       vegetable_name: product.vegetable_name,
-      quantity: isPiece || isDozen ? 1 : 0.25,
+      quantity: isPiece ? 1 : isDozen ? 0.5 : 0.25,
       quantity_unit: isPiece ? 'piece' : isDozen ? 'dozen' : 'kg',
       price: Number(product.price),
       sold_by: product.sold_by,
@@ -112,8 +112,8 @@ const OrderHistory = () => {
           ? {
               ...item,
               quantity: Math.max(
-                ['piece', 'dozen'].includes(item.quantity_unit) ? 1 : item.quantity_unit === 'g' ? 250 : 0.25,
-                Number((item.quantity + (['piece', 'dozen'].includes(item.quantity_unit) ? change * 4 : item.quantity_unit === 'g' ? change * 1000 : change)).toFixed(2))
+                item.quantity_unit === 'piece' ? 1 : item.quantity_unit === 'dozen' ? 0.5 : item.quantity_unit === 'g' ? 250 : 0.25,
+                Number((item.quantity + (item.quantity_unit === 'piece' ? change * 4 : item.quantity_unit === 'dozen' ? change * 2 : item.quantity_unit === 'g' ? change * 1000 : change)).toFixed(2))
               )
             }
           : item
@@ -353,7 +353,7 @@ const OrderHistory = () => {
                   onClick={() => updateQuantity(index, -0.25)}
                   disabled={
                     item.quantity <=
-                    (['piece', 'dozen'].includes(item.quantity_unit) ? 1 : item.quantity_unit === 'g' ? 250 : 0.25)
+                    (item.quantity_unit === 'piece' ? 1 : item.quantity_unit === 'dozen' ? 0.5 : item.quantity_unit === 'g' ? 250 : 0.25)
                   }
                 >
                   <Minus size={16} />

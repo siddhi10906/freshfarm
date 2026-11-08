@@ -61,7 +61,7 @@ CREATE TABLE vegetables (
     category VARCHAR(50) NOT NULL,
     description TEXT,
     price DECIMAL(10,2) NOT NULL,
-    quantity INT NOT NULL DEFAULT 0,
+    quantity DECIMAL(10,3) NOT NULL DEFAULT 0,
     sold_by VARCHAR(12) NOT NULL DEFAULT 'weight',
     image VARCHAR(255) DEFAULT 'default-vegetable.jpg',
     avg_rating DECIMAL(3,2) NOT NULL DEFAULT 0,

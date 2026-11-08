@@ -82,8 +82,8 @@ const ShoppingCart = () => {
                       const availableStock = parseFloat(item.available_stock) || 100;
 
                       const handleRowIncrease = () => {
-                        const step = unit === 'g' ? 250 : 1;
-                        const nextVal = val + step;
+                        const step = unit === 'g' ? 250 : unit === 'dozen' ? 0.5 : 1;
+                        const nextVal = Number((val + step).toFixed(2));
                         const kgNeeded = unit === 'g' ? nextVal / 1000 : nextVal;
                         if (kgNeeded > availableStock) {
                           const stockMsg = unit === 'piece' ? `${availableStock} pieces` : unit === 'dozen' ? `${availableStock} dozen` : `${availableStock} kg`;
@@ -94,8 +94,8 @@ const ShoppingCart = () => {
                       };
 
                       const handleRowDecrease = () => {
-                        const step = unit === 'g' ? 250 : 1;
-                        const nextVal = val - step;
+                        const step = unit === 'g' ? 250 : unit === 'dozen' ? 0.5 : 1;
+                        const nextVal = Number((val - step).toFixed(2));
                         if (nextVal <= 0) {
                           removeFromCart(item.cart_id);
                         } else {
