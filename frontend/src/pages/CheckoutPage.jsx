@@ -273,7 +273,7 @@ const CheckoutPage = () => {
           </div>
         )}
 
-        <form onSubmit={handleInitiateCheckout} style={{ display: 'grid', gridTemplateColumns: '1fr 380px', gap: '30px' }}>
+        <form className="responsive-two-column" onSubmit={handleInitiateCheckout} style={{ display: 'grid', gridTemplateColumns: '1fr 380px', gap: '30px' }}>
           {/* Left Form Column */}
           <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
             {/* Address Card */}

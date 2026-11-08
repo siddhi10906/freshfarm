@@ -86,7 +86,7 @@ const AddVegetable = () => {
           </div>
         )}
 
-        <form onSubmit={handleSubmit} style={{ display: 'grid', gridTemplateColumns: '1fr 340px', gap: '30px' }}>
+        <form className="responsive-two-column" onSubmit={handleSubmit} style={{ display: 'grid', gridTemplateColumns: '1fr 340px', gap: '30px' }}>
           {/* Left Column: Basic Details, Pricing & Inventory */}
           <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
             {/* Basic Details Card */}

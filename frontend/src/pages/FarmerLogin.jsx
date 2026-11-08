@@ -36,7 +36,7 @@ const FarmerLogin = () => {
 
   return (
     <div style={{ width: '100%', minHeight: '85vh', display: 'flex', alignItems: 'center', justifyContent: 'center', background: '#f8fafc', padding: '40px 20px' }}>
-      <div style={{
+      <div className="auth-split-layout" style={{
         width: '100%',
         maxWidth: '920px',
         background: '#ffffff',

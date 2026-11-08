@@ -279,12 +279,12 @@ const AdminDashboard = () => {
   const categoryList = ['All', 'Leafy Greens', 'Tomatoes', 'Potatoes', 'Onions', 'Root Vegetables', 'Fruits', 'Organic'];
 
   return (
-    <div style={{ display: 'flex', minHeight: '100vh', background: '#f4f7f5', width: '100%' }}>
+    <div className="admin-dashboard-layout" style={{ display: 'flex', minHeight: '100vh', background: '#f4f7f5', width: '100%' }}>
       
       {/* ========================================================================= */}
       {/* SIDEBAR NAVIGATION (FIXED LEFT 260PX) */}
       {/* ========================================================================= */}
-      <aside style={{
+      <aside className="admin-dashboard-sidebar" style={{
         width: '260px',
         background: '#065F46',
         color: '#ffffff',
@@ -313,7 +313,7 @@ const AdminDashboard = () => {
         </div>
 
         {/* Sidebar Menu Items */}
-        <nav style={{ flex: 1, padding: '20px 14px', display: 'flex', flexDirection: 'column', gap: '6px' }}>
+        <nav className="admin-dashboard-nav" style={{ flex: 1, padding: '20px 14px', display: 'flex', flexDirection: 'column', gap: '6px' }}>
           
           {/* Item 1: Dashboard */}
           <button
@@ -474,7 +474,7 @@ const AdminDashboard = () => {
       {/* ========================================================================= */}
       {/* MAIN ADMIN WORKSPACE AREA (OFFSET BY 260PX SIDEBAR) */}
       {/* ========================================================================= */}
-      <main style={{ marginLeft: '260px', flex: 1, padding: '30px 40px', minHeight: '100vh' }}>
+      <main className="admin-dashboard-main" style={{ marginLeft: '260px', flex: 1, padding: '30px 40px', minHeight: '100vh' }}>
         
         {/* Top Header Workspace Status Bar */}
         <div style={{
@@ -594,7 +594,7 @@ const AdminDashboard = () => {
             </div>
 
             {/* Governance Info Banner & Recent Activity */}
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '30px' }}>
+                <div className="responsive-two-column" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '30px' }}>
               
               <div className="card" style={{ padding: '24px', borderRadius: '18px', background: '#ffffff', border: '1px solid #e2e8f0' }}>
                 <h3 style={{ fontSize: '1.15rem', fontWeight: '900', color: '#0f172a', marginBottom: '14px', fontFamily: 'Poppins' }}>
@@ -663,7 +663,7 @@ const AdminDashboard = () => {
                 <h4 style={{ fontSize: '1.05rem', fontWeight: '800', color: '#0f172a', marginBottom: '14px' }}>
                   {t('adminDashboard.editFarmerTitle', { id: editingFarmer.farmer_id })}
                 </h4>
-                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr 1fr', gap: '16px' }}>
+                <div className="admin-edit-fields" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr 1fr', gap: '16px' }}>
                   <div>
                     <label className="form-label">{t('farmerDashboard.fullName')}</label>
                     <input type="text" required className="form-control" value={editingFarmer.full_name} onChange={(e) => setEditingFarmer({ ...editingFarmer, full_name: e.target.value })} />
@@ -776,7 +776,7 @@ const AdminDashboard = () => {
                 <h4 style={{ fontSize: '1.05rem', fontWeight: '800', color: '#0f172a', marginBottom: '14px' }}>
                   {t('adminDashboard.editCustomerTitle', { id: editingCustomer.customer_id })}
                 </h4>
-                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr 1fr', gap: '16px' }}>
+                <div className="admin-edit-fields" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr 1fr', gap: '16px' }}>
                   <div>
                     <label className="form-label">{t('farmerDashboard.fullName')}</label>
                     <input type="text" required className="form-control" value={editingCustomer.full_name} onChange={(e) => setEditingCustomer({ ...editingCustomer, full_name: e.target.value })} />
@@ -913,7 +913,7 @@ const AdminDashboard = () => {
                 <h4 style={{ fontSize: '1.05rem', fontWeight: '800', color: '#0f172a', marginBottom: '14px' }}>
                   {t('adminDashboard.editListingTitle', { id: editingVeg.vegetable_id })}
                 </h4>
-                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr 1fr', gap: '16px' }}>
+                <div className="admin-edit-fields" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr 1fr', gap: '16px' }}>
                   <div>
                     <label className="form-label">{t('farmerDashboard.productName')}</label>
                     <input type="text" required className="form-control" value={editingVeg.vegetable_name} onChange={(e) => setEditingVeg({ ...editingVeg, vegetable_name: e.target.value })} />

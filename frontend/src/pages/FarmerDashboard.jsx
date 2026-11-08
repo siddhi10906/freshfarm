@@ -363,7 +363,7 @@ const FarmerDashboard = () => {
             </div>
 
             {/* Sales Overview & Low Stock Alerts */}
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '30px', marginBottom: '30px' }}>
+            <div className="responsive-two-column" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '30px', marginBottom: '30px' }}>
               
               {/* Revenue Chart */}
               <div className="card" style={{ padding: '24px', borderRadius: '18px', background: '#ffffff', border: '1px solid #e2e8f0' }}>
@@ -832,7 +832,7 @@ const FarmerDashboard = () => {
             )}
 
             {isEditingProfile ? (
-              <form onSubmit={handleSaveProfile} style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px' }}>
+              <form className="responsive-two-column" onSubmit={handleSaveProfile} style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px' }}>
                 <div className="form-group">
                   <label className="form-label">{t('farmerDashboard.fullName')}</label>
                   <input

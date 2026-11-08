@@ -304,6 +304,7 @@ body {
 .mobile-menu-toggle { display: none; }
 
 @media (max-width: 1024px) {
+  .admin-edit-fields { grid-template-columns: repeat(2, minmax(0, 1fr)) !important; }
   .home-hero-layout {
     grid-template-columns: minmax(0, 1fr) !important;
     gap: 12px !important;
@@ -346,6 +347,7 @@ body {
 }
 
 @media (max-width: 900px) {
+  .responsive-two-column { grid-template-columns: minmax(0, 1fr) !important; }
   .customer-navbar-main {
     flex-wrap: wrap !important;
     gap: 12px !important;
@@ -410,6 +412,30 @@ body {
 }
 
 @media (max-width: 768px) {
+  .auth-split-layout { grid-template-columns: minmax(0, 1fr) !important; }
+  .auth-split-layout > div:first-child { min-height: 180px; padding: 24px !important; }
+  .auth-split-layout > div:first-child img { min-height: 180px; }
+  .admin-dashboard-layout { display: block !important; }
+  .admin-dashboard-sidebar {
+    position: relative !important;
+    inset: auto !important;
+    width: 100% !important;
+    min-height: 0 !important;
+  }
+  .admin-dashboard-sidebar > div:first-child { padding: 14px 16px !important; }
+  .admin-dashboard-nav {
+    flex-direction: row !important;
+    overflow-x: auto;
+    padding: 10px 12px !important;
+    gap: 8px !important;
+    -webkit-overflow-scrolling: touch;
+  }
+  .admin-dashboard-nav button { flex: 0 0 auto; width: auto !important; white-space: nowrap; }
+  .admin-dashboard-main { margin-left: 0 !important; padding: 18px 14px !important; min-width: 0; }
+  .admin-edit-fields { grid-template-columns: minmax(0, 1fr) !important; }
+  .data-table { display: block; width: 100%; max-width: 100%; overflow-x: auto; white-space: nowrap; -webkit-overflow-scrolling: touch; }
+  .card { min-width: 0; }
+  img { max-width: 100%; }
   .grid-7 { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
   .grid-4, .grid-3 { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; }
   .section-title { font-size: clamp(1.5rem, 7vw, 2.3rem) !important; }
@@ -446,4 +472,13 @@ body {
   .home-hero-artwork { min-height: 190px; max-height: 230px; }
   .home-hero-image { height: 210px !important; }
   .home-hero-backdrop { height: 175px !important; }
+}
+
+@media (max-width: 420px) {
+  .form-row { grid-template-columns: minmax(0, 1fr) !important; }
+  .admin-dashboard-main { padding: 14px 10px !important; }
+  .admin-dashboard-main h1 { font-size: 1.5rem !important; }
+  .admin-dashboard-main h2 { font-size: 1.25rem !important; }
+  .auth-split-layout { border-radius: 16px !important; }
+  .auth-split-layout > div:last-child { padding: 24px 18px !important; }
 }

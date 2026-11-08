@@ -57,7 +57,7 @@ const ShoppingCart = () => {
             </Link>
           </div>
         ) : (
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 360px', gap: '30px' }}>
+          <div className="responsive-two-column" style={{ display: 'grid', gridTemplateColumns: '1fr 360px', gap: '30px' }}>
             
             {/* Left: Product Table */}
             <div>
