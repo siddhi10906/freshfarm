@@ -118,13 +118,13 @@ const HomePage = () => {
 
   // 7 Categories
   const categoryList = [
-    { key: 'leafy', title: t('categories.leafy'), rawTitle: 'Leafy Greens', items: t('categories.items', { count: 12 }), image: '/assets/images/exact_cat1_leafy.png' },
-    { key: 'tomatoes', title: t('categories.tomatoes'), rawTitle: 'Tomatoes', items: t('categories.items', { count: 8 }), image: '/assets/images/exact_cat2_tomatoes.png' },
-    { key: 'potatoes', title: t('categories.potatoes'), rawTitle: 'Potatoes', items: t('categories.items', { count: 10 }), image: '/assets/images/exact_cat3_potatoes.png' },
-    { key: 'onions', title: t('categories.onions'), rawTitle: 'Onions', items: t('categories.items', { count: 9 }), image: '/assets/images/exact_cat4_onions.png' },
-    { key: 'root', title: t('categories.root'), rawTitle: 'Root Vegetables', items: t('categories.items', { count: 15 }), image: '/assets/images/exact_cat5_root.png' },
-    { key: 'fruits', title: t('categories.fruits'), rawTitle: 'Fruits', items: t('categories.items', { count: 20 }), image: '/assets/images/exact_cat6_fruits.png' },
-    { key: 'organic', title: t('categories.organic'), rawTitle: 'Organic', items: t('categories.items', { count: 18 }), image: '/assets/images/exact_cat7_organic.png' }
+    { key: 'leafy', title: t('categories.leafy'), rawTitle: 'Leafy Greens', image: '/assets/images/exact_cat1_leafy.png' },
+    { key: 'tomatoes', title: t('categories.tomatoes'), rawTitle: 'Tomatoes', image: '/assets/images/exact_cat2_tomatoes.png' },
+    { key: 'potatoes', title: t('categories.potatoes'), rawTitle: 'Potatoes', image: '/assets/images/exact_cat3_potatoes.png' },
+    { key: 'onions', title: t('categories.onions'), rawTitle: 'Onions', image: '/assets/images/exact_cat4_onions.png' },
+    { key: 'root', title: t('categories.root'), rawTitle: 'Root Vegetables', image: '/assets/images/exact_cat5_root.png' },
+    { key: 'fruits', title: t('categories.fruits'), rawTitle: 'Fruits', image: '/assets/images/exact_cat6_fruits.png' },
+    { key: 'organic', title: t('categories.organic'), rawTitle: 'Organic', image: '/assets/images/exact_cat7_organic.png' }
   ];
 
   return (
@@ -304,7 +304,6 @@ const HomePage = () => {
                 />
                 <div style={{ width: '100%', textAlign: 'left' }}>
                   <div style={{ fontWeight: '800', fontSize: '0.9rem', color: '#0f172a', fontFamily: 'Poppins' }}>{cat.title}</div>
-                  <span style={{ fontSize: '0.75rem', color: '#94a3b8', display: 'block' }}>{cat.items}</span>
                 </div>
                 <div style={{ position: 'absolute', bottom: '14px', right: '14px', background: '#0B6B3A', color: 'white', width: '24px', height: '24px', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '0.8rem' }}>
                   ➔
