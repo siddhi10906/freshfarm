@@ -54,6 +54,7 @@ const HomePage = () => {
       vegetable_name: 'Fresh Cauliflower',
       category: 'Organic',
       weight: '1 piece',
+      sold_by: 'piece',
       price: '45.00',
       originalPrice: '45',
       discount: '22% OFF',
