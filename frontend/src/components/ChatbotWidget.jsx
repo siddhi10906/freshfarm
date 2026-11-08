@@ -242,7 +242,8 @@ const ChatbotWidget = () => {
 
     try {
       const res = await API.post('/chatbot/ask', {
-        message: query
+        message: query,
+        history: messages.slice(-12)
       });
 
       const replyText = res.data.reply || res.data.text;
