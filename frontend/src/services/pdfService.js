@@ -57,7 +57,7 @@ export const generateInvoicePDF = (order) => {
 
   // Prepare Items Table
   const tableData = (order.items || []).map((item, index) => {
-    const unit = item.quantity_unit || (item.sold_by === 'piece' ? 'piece' : 'kg');
+    const unit = item.quantity_unit || (item.sold_by === 'piece' ? 'piece' : item.sold_by === 'dozen' ? 'dozen' : 'kg');
     const val = item.quantity_value !== undefined ? item.quantity_value : item.quantity;
     const lineTotal = item.quantity_unit === 'g'
       ? (parseFloat(item.price) * parseFloat(val)) / 1000
@@ -69,9 +69,9 @@ export const generateInvoicePDF = (order) => {
       item.category || 'General',
       item.farmer_name || 'Local Farmer',
       item.surplus_listing_id
-        ? `Rescue Rs. ${parseFloat(item.price).toFixed(2)} (usual ${parseFloat(item.original_price).toFixed(2)})/${unit === 'piece' ? 'pc' : 'kg'}`
-        : `Rs. ${parseFloat(item.price).toFixed(2)}/${unit === 'piece' ? 'pc' : 'kg'}`,
-      `${val} ${unit === 'piece' ? (val > 1 ? 'pcs' : 'pc') : unit}`,
+        ? `Rescue Rs. ${parseFloat(item.price).toFixed(2)} (usual ${parseFloat(item.original_price).toFixed(2)})/${unit === 'piece' ? 'pc' : unit}`
+        : `Rs. ${parseFloat(item.price).toFixed(2)}/${unit === 'piece' ? 'pc' : unit}`,
+      `${val} ${unit === 'piece' ? (val > 1 ? 'pcs' : 'pc') : unit === 'dozen' ? (val > 1 ? 'dozens' : 'dozen') : unit}`,
       `Rs. ${lineTotal.toFixed(2)}`
     ];
   });

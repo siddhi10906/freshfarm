@@ -128,7 +128,7 @@ const AddVegetable = () => {
               <div className="grid-2">
                 <div className="form-group">
                   <label className="form-label">
-                    {formData.sold_by === 'piece' ? 'Price per Piece (₹)' : t('farmerDashboard.pricePerKgLabel')}
+                    {formData.sold_by === 'piece' ? 'Price per Piece (₹)' : formData.sold_by === 'dozen' ? 'Price per Dozen (₹)' : t('farmerDashboard.pricePerKgLabel')}
                   </label>
                   <input
                     type="number"
@@ -150,6 +150,7 @@ const AddVegetable = () => {
                   >
                     <option value="weight">By Weight (per kg / grams: 250g, 500g, 1kg)</option>
                     <option value="piece">By Piece (per piece / count: 1 pc, 2 pcs)</option>
+                    <option value="dozen">By Dozen (12 pieces per dozen)</option>
                   </select>
                 </div>
               </div>
@@ -163,7 +164,7 @@ const AddVegetable = () => {
 
               <div className="grid-2">
                 <div className="form-group">
-                  <label className="form-label">{t('farmerDashboard.stockQtyLabel')}</label>
+                  <label className="form-label">{formData.sold_by === 'piece' ? 'Stock Quantity (pieces)' : formData.sold_by === 'dozen' ? 'Stock Quantity (dozens)' : t('farmerDashboard.stockQtyLabel')}</label>
                   <input
                     type="number"
                     required

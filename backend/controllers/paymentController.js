@@ -1,5 +1,6 @@
 const crypto = require('crypto');
 const db = require('../config/db');
+const { defaultUnit, unitMatchesProduct, VALID_UNITS, stockQuantity, lineAmount } = require('../utils/quantityUnits');
 
 const apiBase = 'https://api.razorpay.com/v1';
 
@@ -31,13 +32,13 @@ async function razorpayRequest(path, method = 'GET', payload) {
 function calculateAmount(items) {
   const subtotal = items.reduce((sum, item) => {
     const value = Number(item.quantity_value);
-    return sum + Number(item.price) * (item.quantity_unit === 'g' ? value / 1000 : value);
+    return sum + lineAmount(item.price, item.quantity_unit, value);
   }, 0);
   return Number((subtotal + (subtotal < 199 ? 15 : 0)).toFixed(2));
 }
 
 function toStockQuantity(unit, value) {
-  return unit === 'g' ? value / 1000 : value;
+  return stockQuantity(unit, value);
 }
 
 function readItems(value) {
@@ -127,12 +128,12 @@ exports.createRazorpayOrder = async (req, res) => {
     );
     const stockById = new Map(vegetables.map(item => [Number(item.vegetable_id), item]));
     const snapshot = cartItems.map(item => {
-      const unit = item.quantity_unit || (item.sold_by === 'piece' ? 'piece' : 'kg');
+      const unit = item.quantity_unit || defaultUnit(item.sold_by);
       const value = Number(item.quantity_value ?? item.quantity);
-      if (!['kg', 'g', 'piece'].includes(unit) || !Number.isFinite(value) || value <= 0) {
+      if (!VALID_UNITS.includes(unit) || !Number.isFinite(value) || value <= 0) {
         throw new Error(`Invalid quantity for ${item.vegetable_name}.`);
       }
-      if ((item.sold_by === 'piece') !== (unit === 'piece')) {
+      if (!unitMatchesProduct(item.sold_by, unit)) {
         throw new Error(`Invalid quantity unit for ${item.vegetable_name}.`);
       }
       return {

@@ -94,6 +94,11 @@
     "freshest": "सर्वात ताजे"
   },
   "product": {
+    "dozen": "डझन",
+    "dozens": "डझन",
+    "quantity": "प्रमाण",
+    "quantityDozens": "प्रमाण (डझन)",
+    "quantityWeight": "प्रमाण (वजन)",
     "addToCart": "कार्टमध्ये जोडा",
     "addedToCart": "कार्टमध्ये जोडले!",
     "outOfStock": "स्टॉक संपला",
@@ -111,6 +116,13 @@
     "noProductsFound": "तुमच्या शोधाशी जुळणारे कोणतेही उत्पादन सापडले नाही."
   },
   "vegNames": {
+    "Farm Fresh Cucumbers": "ताज्या काकड्या",
+    "Fresh Green Cabbage": "ताजी कोबी",
+    "Earthy Beetroot": "ताजे बीट",
+    "Crisp Red Apples": "कुरकुरीत लाल सफरचंदे",
+    "Fresh Bananas": "ताजी केळी",
+    "Juicy Oranges": "रसाळ संत्री",
+    "Sweet Pomegranates": "गोड डाळिंब",
     "Green Peas (Matar)": "हिरवा मटार",
     "Fresh Cauliflower": "ताजा फ्लॉवर",
     "Organic Cauliflower": "ऑर्गॅनिक फ्लॉवर",

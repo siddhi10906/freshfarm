@@ -100,7 +100,7 @@ const OrderCard = ({ order, isFarmer = false }) => {
             {(order.items || []).map((item, idx) => {
               const reviewed = isAlreadyReviewed(item.vegetable_id, order.order_id);
               const isDelivered = order.status === 'Delivered';
-              const unit = item.quantity_unit || (item.sold_by === 'piece' ? 'piece' : 'kg');
+              const unit = item.quantity_unit || (item.sold_by === 'piece' ? 'piece' : item.sold_by === 'dozen' ? 'dozen' : 'kg');
               const val = item.quantity_value !== undefined ? item.quantity_value : item.quantity;
               const lineTotal = item.quantity_unit === 'g'
                 ? (parseFloat(item.price) * parseFloat(val)) / 1000
@@ -119,7 +119,7 @@ const OrderCard = ({ order, isFarmer = false }) => {
                       <span style={{ fontWeight: '600', color: '#1e293b' }}>{tVegName(t, item.vegetable_name)}</span>
                       {item.surplus_listing_id && <span style={{ display: 'inline-block', marginLeft: 6, background: '#fff2cf', color: '#8a4b00', fontWeight: 800, fontSize: '0.68rem', padding: '2px 7px', borderRadius: 12 }}>Rescue Deal</span>}
                       <span style={{ fontSize: '0.8rem', color: '#64748b', display: 'block' }}>
-                        {val} {unit === 'piece' ? (val > 1 ? 'pcs' : 'pc') : unit} x ₹{parseFloat(item.price).toFixed(2)} / {unit === 'piece' ? 'pc' : 'kg'}
+                        {val} {unit === 'piece' ? (val > 1 ? 'pcs' : 'pc') : unit === 'dozen' ? (val > 1 ? 'dozens' : 'dozen') : unit} x ₹{parseFloat(item.price).toFixed(2)} / {unit === 'piece' ? 'pc' : unit === 'dozen' ? 'dozen' : 'kg'}
                       </span>
                     </div>
                   </div>

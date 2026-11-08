@@ -147,7 +147,7 @@ const EditVegetable = () => {
 
             <div className="form-group">
               <label className="form-label">
-                {formData.sold_by === 'piece' ? 'Price per Piece (₹)' : t('farmerDashboard.pricePerKgLabel')}
+                {formData.sold_by === 'piece' ? 'Price per Piece (₹)' : formData.sold_by === 'dozen' ? 'Price per Dozen (₹)' : t('farmerDashboard.pricePerKgLabel')}
               </label>
               <input
                 type="number"
@@ -170,12 +170,13 @@ const EditVegetable = () => {
               >
                 <option value="weight">By Weight (per kg / grams: 250g, 500g, 1kg)</option>
                 <option value="piece">By Piece (per piece / count: 1 pc, 2 pcs)</option>
+                <option value="dozen">By Dozen (12 pieces per dozen)</option>
               </select>
             </div>
 
             <div className="form-group">
               <label className="form-label">
-                {formData.sold_by === 'piece' ? 'Available Stock (Pieces)' : t('farmerDashboard.availableStock')}
+                {formData.sold_by === 'piece' ? 'Available Stock (Pieces)' : formData.sold_by === 'dozen' ? 'Available Stock (Dozens)' : t('farmerDashboard.availableStock')}
               </label>
               <input
                 type="number"

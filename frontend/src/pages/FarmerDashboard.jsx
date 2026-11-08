@@ -647,10 +647,10 @@ const FarmerDashboard = () => {
                         <td>
                           <div style={{ fontSize: '0.88rem' }}>
                             {ord.items.map(i => {
-                              const u = i.quantity_unit || (i.sold_by === 'piece' ? 'piece' : 'kg');
+                              const u = i.quantity_unit || (i.sold_by === 'piece' ? 'piece' : i.sold_by === 'dozen' ? 'dozen' : 'kg');
                               const v = i.quantity_value !== undefined ? i.quantity_value : i.quantity;
-                              const unitLabel = u === 'piece' ? (v > 1 ? 'pcs' : 'pc') : u;
-                              const rescueLabel = i.surplus_listing_id ? ` · Rescue Deal ₹${Number(i.price).toFixed(2)}/${u === 'piece' ? 'pc' : 'kg'}` : '';
+                              const unitLabel = u === 'piece' ? (v > 1 ? 'pcs' : 'pc') : u === 'dozen' ? (v > 1 ? 'dozens' : 'dozen') : u;
+                              const rescueLabel = i.surplus_listing_id ? ` · Rescue Deal ₹${Number(i.price).toFixed(2)}/${u === 'piece' ? 'pc' : u === 'dozen' ? 'dozen' : 'kg'}` : '';
                               return `${tVegName(t, i.vegetable_name)} (${v} ${unitLabel}${rescueLabel})`;
                             }).join(', ')}
                           </div>
@@ -754,10 +754,10 @@ const FarmerDashboard = () => {
                           </td>
                           <td>{tCategory(t, veg.category)}</td>
                           <td style={{ fontWeight: '800', color: '#0B6B3A' }}>
-                            ₹{parseFloat(veg.price).toFixed(2)} / {veg.sold_by === 'piece' ? 'pc' : 'kg'}
+                            ₹{parseFloat(veg.price).toFixed(2)} / {veg.sold_by === 'piece' ? 'pc' : veg.sold_by === 'dozen' ? 'dozen' : 'kg'}
                           </td>
                           <td style={{ fontWeight: '900', color: isLow ? '#dc2626' : '#0f172a' }}>
-                            {stock} {veg.sold_by === 'piece' ? 'pcs' : t('common.kg', 'kg')}
+                            {stock} {veg.sold_by === 'piece' ? 'pcs' : veg.sold_by === 'dozen' ? 'dozens' : t('common.kg', 'kg')}
                           </td>
                           <td>
                             <span style={{ fontSize: '0.78rem', fontWeight: '800', color: isLow ? '#dc2626' : '#16a34a', background: isLow ? '#fef2f2' : '#f0fdf4', padding: '4px 10px', borderRadius: '8px' }}>

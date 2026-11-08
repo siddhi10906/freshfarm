@@ -94,6 +94,11 @@
     "freshest": "सबसे ताज़ा"
   },
   "product": {
+    "dozen": "दर्जन",
+    "dozens": "दर्जन",
+    "quantity": "मात्रा",
+    "quantityDozens": "मात्रा (दर्जन)",
+    "quantityWeight": "मात्रा (वज़न)",
     "addToCart": "कार्ट में जोड़ें",
     "addedToCart": "कार्ट में जोड़ा गया!",
     "outOfStock": "स्टॉक समाप्त",
@@ -111,6 +116,13 @@
     "noProductsFound": "आपकी खोज से मेल खाता कोई उत्पाद नहीं मिला।"
   },
   "vegNames": {
+    "Farm Fresh Cucumbers": "ताज़े खीरे",
+    "Fresh Green Cabbage": "ताज़ी हरी पत्तागोभी",
+    "Earthy Beetroot": "ताज़ा चुकंदर",
+    "Crisp Red Apples": "कुरकुरे लाल सेब",
+    "Fresh Bananas": "ताज़े केले",
+    "Juicy Oranges": "रसदार संतरे",
+    "Sweet Pomegranates": "मीठे अनार",
     "Green Peas (Matar)": "हरी मटर (मटर)",
     "Fresh Cauliflower": "ताज़ी फूलगोभी",
     "Organic Cauliflower": "ऑर्गेनिक फूलगोभी",

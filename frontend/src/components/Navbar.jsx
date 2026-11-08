@@ -4,7 +4,7 @@ import { useTranslation } from 'react-i18next';
 import { AuthContext } from '../context/AuthContext';
 import { CartContext } from '../context/CartContext';
 import LanguageSwitcher from './LanguageSwitcher';
-import { ShoppingBag, LogOut, Search, User, Leaf } from 'lucide-react';
+import { ShoppingBag, LogOut, Search, User, Leaf, Menu, X } from 'lucide-react';
 
 const Navbar = () => {
   const { t } = useTranslation();
@@ -14,6 +14,7 @@ const Navbar = () => {
   const location = useLocation();
 
   const [searchQuery, setSearchQuery] = useState('');
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   const isFarmer = user?.role === 'farmer' || location.pathname.startsWith('/farmer');
   const isAdmin = user?.role === 'admin' || location.pathname.startsWith('/admin');
@@ -65,7 +66,7 @@ const Navbar = () => {
 
         {/* Main Farmer Header */}
         <div style={{ background: '#ffffff', borderBottom: '1px solid #e2e8f0' }}>
-          <div className="container" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '12px 24px' }}>
+          <div className="container farmer-navbar-main" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '12px 24px' }}>
             
             {/* Farmer Brand Logo */}
             <Link to="/farmer/dashboard?tab=dashboard" style={{ display: 'flex', alignItems: 'center', gap: '10px', textDecoration: 'none' }}>
@@ -217,7 +218,7 @@ const Navbar = () => {
 
       {/* 2. Premium Navbar (Full Width) */}
       <div style={{ background: '#ffffff', borderBottom: '1px solid #f1f5f9', width: '100%' }}>
-        <div className="container" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '14px 32px', gap: '24px' }}>
+        <div className="container customer-navbar-main" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '14px 32px', gap: '24px' }}>
           
           {/* Logo & Subtext */}
           <Link to="/" style={{ display: 'flex', alignItems: 'center', gap: '10px', textDecoration: 'none' }}>
@@ -234,8 +235,12 @@ const Navbar = () => {
             </div>
           </Link>
 
+          <button type="button" className="mobile-menu-toggle" aria-label={mobileMenuOpen ? 'Close menu' : 'Open menu'} onClick={() => setMobileMenuOpen(open => !open)}>
+            {mobileMenuOpen ? <X size={23} /> : <Menu size={23} />}
+          </button>
+
           {/* Navigation Menu Links */}
-          <div style={{ display: 'flex', gap: '26px', fontSize: '0.9rem', fontWeight: '700' }}>
+          <div className={`customer-navbar-links${mobileMenuOpen ? ' is-open' : ''}`} style={{ display: 'flex', gap: '26px', fontSize: '0.9rem', fontWeight: '700' }}>
             <Link to="/" style={{ color: isActive('/') ? '#0B6B3A' : '#475569', borderBottom: isActive('/') ? '2px solid #0B6B3A' : 'none', paddingBottom: '4px' }}>
               {t('nav.home')}
             </Link>
@@ -256,7 +261,7 @@ const Navbar = () => {
           </div>
 
           {/* Search Bar Input */}
-          <form onSubmit={handleSearchSubmit} style={{ display: 'flex', alignItems: 'center', border: '1px solid #e2e8f0', borderRadius: '24px', overflow: 'hidden', width: '340px', background: '#f8fafc', padding: '2px 4px' }}>
+          <form className={`customer-navbar-search${mobileMenuOpen ? ' is-open' : ''}`} onSubmit={handleSearchSubmit} style={{ display: 'flex', alignItems: 'center', border: '1px solid #e2e8f0', borderRadius: '24px', overflow: 'hidden', width: '340px', background: '#f8fafc', padding: '2px 4px' }}>
             <input
               type="text"
               value={searchQuery}
@@ -270,7 +275,7 @@ const Navbar = () => {
           </form>
 
           {/* Cart Icon & Auth Button */}
-          <div style={{ display: 'flex', alignItems: 'center', gap: '20px' }}>
+          <div className={`customer-navbar-actions${mobileMenuOpen ? ' is-open' : ''}`} style={{ display: 'flex', alignItems: 'center', gap: '20px' }}>
             {(!user || user.role === 'customer') && (
               <Link to="/cart" style={{ position: 'relative', display: 'flex', alignItems: 'center', textDecoration: 'none', color: '#0f172a' }}>
                 <div style={{ background: '#f8fafc', padding: '9px', borderRadius: '50%', border: '1px solid #e2e8f0' }}>

@@ -8,7 +8,7 @@ const CartItem = ({ item }) => {
   const { t } = useTranslation();
   const { updateQuantity, removeFromCart } = useContext(CartContext);
 
-  const unit = item.quantity_unit || (item.sold_by === 'piece' ? 'piece' : 'kg');
+  const unit = item.quantity_unit || (item.sold_by === 'piece' ? 'piece' : item.sold_by === 'dozen' ? 'dozen' : 'kg');
   const val = parseFloat(item.quantity_value) || parseFloat(item.quantity) || 1;
   const availableStock = parseFloat(item.available_stock) || 100;
 
@@ -23,7 +23,7 @@ const CartItem = ({ item }) => {
 
     const kgNeeded = nextUnit === 'g' ? nextVal / 1000 : nextVal;
     if (kgNeeded > availableStock) {
-      const stockMsg = unit === 'piece' ? `${availableStock} pieces` : `${availableStock} kg`;
+      const stockMsg = unit === 'piece' ? `${availableStock} pieces` : unit === 'dozen' ? `${availableStock} dozen` : `${availableStock} kg`;
       alert(`Cannot exceed available stock of ${stockMsg}.`);
       return;
     }
@@ -93,7 +93,7 @@ const CartItem = ({ item }) => {
             <User size={12} color="#2e7d32" /> {t('product.farmer')}: {item.farmer_name || 'Farmer'}
           </span>
           <span style={{ fontSize: '0.85rem', fontWeight: '700', color: '#2e7d32', marginTop: '2px', display: 'block' }}>
-            ₹{parseFloat(item.price).toFixed(2)} / {unit === 'piece' ? 'pc' : 'kg'}
+            ₹{parseFloat(item.price).toFixed(2)} / {unit === 'piece' ? 'pc' : unit === 'dozen' ? 'dozen' : 'kg'}
           </span>
           {item.is_rescue_deal && <small style={{ color: '#64748b' }}>Usual price ₹{Number(item.original_price).toFixed(2)}</small>}
         </div>
@@ -119,7 +119,7 @@ const CartItem = ({ item }) => {
         </button>
 
         <span style={{ fontWeight: '700', fontSize: '0.95rem', minWidth: '68px', textAlign: 'center' }}>
-          {val} {unit === 'piece' ? (val > 1 ? 'pcs' : 'pc') : unit}
+          {val} {unit === 'piece' ? (val > 1 ? 'pcs' : 'pc') : unit === 'dozen' ? (val > 1 ? 'dozens' : 'dozen') : unit}
         </span>
 
         <button

@@ -54,7 +54,7 @@ const OrderHistory = () => {
         vegetable_name:
           item.vegetable_name || item.name || 'Vegetable',
         quantity: Number(item.quantity_value ?? item.quantity ?? 1),
-        quantity_unit: item.quantity_unit || 'kg',
+        quantity_unit: item.quantity_unit || (item.sold_by === 'piece' ? 'piece' : item.sold_by === 'dozen' ? 'dozen' : 'kg'),
         price: Number(item.price || 0),
         sold_by: item.sold_by || 'weight',
         surplus_listing_id: item.surplus_listing_id || null,
@@ -80,11 +80,12 @@ const OrderHistory = () => {
     const product = availableProducts.find(v => Number(v.vegetable_id) === Number(productToAdd));
     if (!product || editItems.some(item => Number(item.vegetable_id) === Number(product.vegetable_id))) return;
     const isPiece = product.sold_by === 'piece';
+    const isDozen = product.sold_by === 'dozen';
     setEditItems(prev => [...prev, {
       vegetable_id: product.vegetable_id,
       vegetable_name: product.vegetable_name,
-      quantity: isPiece ? 1 : 0.25,
-      quantity_unit: isPiece ? 'piece' : 'kg',
+      quantity: isPiece || isDozen ? 1 : 0.25,
+      quantity_unit: isPiece ? 'piece' : isDozen ? 'dozen' : 'kg',
       price: Number(product.price),
       sold_by: product.sold_by,
       surplus_listing_id: null,
@@ -111,8 +112,8 @@ const OrderHistory = () => {
           ? {
               ...item,
               quantity: Math.max(
-                item.quantity_unit === 'piece' ? 1 : item.quantity_unit === 'g' ? 250 : 0.25,
-                Number((item.quantity + (item.quantity_unit === 'piece' ? change * 4 : item.quantity_unit === 'g' ? change * 1000 : change)).toFixed(2))
+                ['piece', 'dozen'].includes(item.quantity_unit) ? 1 : item.quantity_unit === 'g' ? 250 : 0.25,
+                Number((item.quantity + (['piece', 'dozen'].includes(item.quantity_unit) ? change * 4 : item.quantity_unit === 'g' ? change * 1000 : change)).toFixed(2))
               )
             }
           : item
@@ -352,7 +353,7 @@ const OrderHistory = () => {
                   onClick={() => updateQuantity(index, -0.25)}
                   disabled={
                     item.quantity <=
-                    (item.quantity_unit === 'piece' ? 1 : item.quantity_unit === 'g' ? 250 : 0.25)
+                    (['piece', 'dozen'].includes(item.quantity_unit) ? 1 : item.quantity_unit === 'g' ? 250 : 0.25)
                   }
                 >
                   <Minus size={16} />

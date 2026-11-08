@@ -74,7 +74,7 @@ const ShoppingCart = () => {
                   </thead>
                   <tbody>
                     {items.map((item) => {
-                      const unit = item.quantity_unit || (item.sold_by === 'piece' ? 'piece' : 'kg');
+                      const unit = item.quantity_unit || (item.sold_by === 'piece' ? 'piece' : item.sold_by === 'dozen' ? 'dozen' : 'kg');
                       const val = item.quantity_value !== undefined ? parseFloat(item.quantity_value) : parseFloat(item.quantity);
                       const lineTotal = item.item_total !== undefined
                         ? item.item_total
@@ -86,7 +86,7 @@ const ShoppingCart = () => {
                         const nextVal = val + step;
                         const kgNeeded = unit === 'g' ? nextVal / 1000 : nextVal;
                         if (kgNeeded > availableStock) {
-                          const stockMsg = unit === 'piece' ? `${availableStock} pieces` : `${availableStock} kg`;
+                          const stockMsg = unit === 'piece' ? `${availableStock} pieces` : unit === 'dozen' ? `${availableStock} dozen` : `${availableStock} kg`;
                           alert(`Cannot exceed available stock of ${stockMsg}.`);
                           return;
                         }
@@ -115,7 +115,7 @@ const ShoppingCart = () => {
                             </span>
                           </td>
                           <td style={{ padding: '18px 16px', fontWeight: '700', color: '#0f172a' }}>
-                            ₹{parseFloat(item.price).toFixed(2)} / {unit === 'piece' ? 'pc' : 'kg'}
+                            ₹{parseFloat(item.price).toFixed(2)} / {unit === 'piece' ? 'pc' : unit === 'dozen' ? 'dozen' : 'kg'}
                           </td>
                           <td style={{ padding: '18px 16px' }}>
                             <div style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', background: '#f8fafc', padding: '6px 12px', borderRadius: '10px', border: '1px solid #cbd5e1' }}>
@@ -127,7 +127,7 @@ const ShoppingCart = () => {
                                 <Minus size={14} />
                               </button>
                               <span style={{ fontWeight: '800', minWidth: '60px', textAlign: 'center', color: '#0f172a', fontSize: '0.9rem' }}>
-                                {val} {unit === 'piece' ? (val > 1 ? 'pcs' : 'pc') : unit}
+                                {val} {unit === 'piece' ? (val > 1 ? 'pcs' : 'pc') : unit === 'dozen' ? (val > 1 ? 'dozens' : 'dozen') : unit}
                               </span>
                               <button
                                 type="button"

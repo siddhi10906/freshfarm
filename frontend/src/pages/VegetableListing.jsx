@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext, useMemo } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import API from '../services/api';
@@ -6,9 +6,11 @@ import VegetableCard from '../components/VegetableCard';
 import SearchBar from '../components/SearchBar';
 import FilterSidebar from '../components/FilterSidebar';
 import LoadingSpinner from '../components/LoadingSpinner';
+import { AuthContext } from '../context/AuthContext';
 
 const VegetableListing = () => {
   const { t } = useTranslation();
+  const { user } = useContext(AuthContext);
   const [searchParams] = useSearchParams();
   const initialCategory = searchParams.get('category') || 'All';
 
@@ -22,6 +24,24 @@ const VegetableListing = () => {
   const [sortOption, setSortOption] = useState('default');
   const [minPrice, setMinPrice] = useState('');
   const [maxPrice, setMaxPrice] = useState('');
+
+  const nearbyFirst = useMemo(() => {
+    const city = String(user?.city || '').trim().toLowerCase();
+    const address = String(user?.address || '').toLowerCase();
+    if (!city) return vegetables;
+    const puneNearAreas = ['karvenagar', 'shivajinagar', 'kothrud', 'deccan', 'erandwane', 'warje', 'sinhagad'];
+    const customerIsPune = city.includes('pune') || address.includes('pune');
+    const localityMatches = (farmerVillage) => {
+      const village = String(farmerVillage || '').trim().toLowerCase();
+      return village.length > 2 && address.includes(village);
+    };
+    return [...vegetables].sort((a, b) => {
+      const rank = (farmer) => localityMatches(farmer.village) ? 0 :
+        (customerIsPune && puneNearAreas.includes(String(farmer.village || '').trim().toLowerCase())) ? 1 :
+        String(farmer.district || '').trim().toLowerCase() === city ? 2 : 3;
+      return rank(a) - rank(b);
+    });
+  }, [vegetables, user?.city, user?.address]);
 
   const fetchCategories = async () => {
     try {
@@ -89,7 +109,7 @@ const VegetableListing = () => {
         <SearchBar value={searchTerm} onChange={setSearchTerm} />
       </div>
 
-      <div style={{ display: 'grid', gridTemplateColumns: '260px 1fr', gap: '30px' }}>
+      <div className="vegetable-list-layout" style={{ display: 'grid', gridTemplateColumns: '260px minmax(0, 1fr)', gap: '30px' }}>
         {/* Left Filter Sidebar */}
         <div>
           <FilterSidebar
@@ -125,8 +145,8 @@ const VegetableListing = () => {
                 </span>
               </div>
 
-              <div className="grid-3">
-                {vegetables.map((veg) => (
+              <div className="grid-3 vegetable-product-grid">
+                {nearbyFirst.map((veg) => (
                   <VegetableCard key={veg.vegetable_id} vegetable={veg} />
                 ))}
               </div>

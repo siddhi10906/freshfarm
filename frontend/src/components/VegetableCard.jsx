@@ -25,13 +25,15 @@ const VegetableCard = ({ vegetable }) => {
   const [weightGrams, setWeightGrams] = useState(500);
   // Piece-based: steps by 1 piece, minimum 1 piece, default 1 piece
   const [pieceCount, setPieceCount] = useState(1);
+  const [dozenCount, setDozenCount] = useState(1);
 
   const availableStock = parseFloat(vegetable.quantity) || 100;
   const maxGrams = availableStock * 1000;
   const maxPieces = availableStock;
+  const maxDozens = availableStock;
 
-  const isMinDisabled = soldBy === 'piece' ? pieceCount <= 1 : weightGrams <= 250;
-  const isMaxDisabled = soldBy === 'piece' ? pieceCount >= maxPieces : (weightGrams + 250 > maxGrams);
+  const isMinDisabled = soldBy === 'piece' ? pieceCount <= 1 : soldBy === 'dozen' ? dozenCount <= 1 : weightGrams <= 250;
+  const isMaxDisabled = soldBy === 'piece' ? pieceCount >= maxPieces : soldBy === 'dozen' ? dozenCount >= maxDozens : (weightGrams + 250 > maxGrams);
 
   const handleDecrease = (e) => {
     e.stopPropagation();
@@ -39,6 +41,8 @@ const VegetableCard = ({ vegetable }) => {
       if (pieceCount > 1) {
         setPieceCount(prev => prev - 1);
       }
+    } else if (soldBy === 'dozen') {
+      if (dozenCount > 1) setDozenCount(prev => prev - 1);
     } else {
       if (weightGrams > 250) {
         setWeightGrams(prev => prev - 250);
@@ -52,6 +56,8 @@ const VegetableCard = ({ vegetable }) => {
       if (pieceCount < maxPieces) {
         setPieceCount(prev => prev + 1);
       }
+    } else if (soldBy === 'dozen') {
+      if (dozenCount < maxDozens) setDozenCount(prev => prev + 1);
     } else {
       if (weightGrams + 250 <= maxGrams) {
         setWeightGrams(prev => prev + 250);
@@ -64,6 +70,7 @@ const VegetableCard = ({ vegetable }) => {
     if (soldBy === 'piece') {
       return `${pieceCount} ${pieceCount > 1 ? 'pieces' : 'piece'}`;
     }
+    if (soldBy === 'dozen') return `${dozenCount} ${dozenCount > 1 ? t('product.dozens') : t('product.dozen')}`;
     if (weightGrams < 1000) {
       return `${weightGrams}g`;
     }
@@ -72,7 +79,7 @@ const VegetableCard = ({ vegetable }) => {
   };
 
   // Multiplier for price & stock calculation
-  const mult = soldBy === 'piece' ? pieceCount : (weightGrams / 1000);
+  const mult = soldBy === 'piece' ? pieceCount : soldBy === 'dozen' ? dozenCount : (weightGrams / 1000);
 
   const price = parseFloat(vegetable.price) || 25;
   const currentPrice = (price * mult).toFixed(2);
@@ -94,6 +101,8 @@ const VegetableCard = ({ vegetable }) => {
       setAdding(true);
       if (soldBy === 'piece') {
         await addToCart(vegetable.vegetable_id, pieceCount, 'piece', pieceCount);
+      } else if (soldBy === 'dozen') {
+        await addToCart(vegetable.vegetable_id, dozenCount, 'dozen', dozenCount);
       } else {
         const unit = weightGrams < 1000 ? 'g' : 'kg';
         const val = weightGrams < 1000 ? weightGrams : (weightGrams / 1000);
@@ -234,7 +243,7 @@ const VegetableCard = ({ vegetable }) => {
           <div style={{ marginBottom: '12px' }}>
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '6px' }}>
               <span style={{ fontSize: '0.7rem', color: '#64748b', fontWeight: '700', textTransform: 'uppercase', letterSpacing: '0.3px' }}>
-                {soldBy === 'piece' ? 'Quantity' : 'Quantity (Weight)'}
+                {soldBy === 'piece' ? t('product.quantity') : soldBy === 'dozen' ? t('product.quantityDozens') : t('product.quantityWeight')}
               </span>
               <span style={{ fontSize: '0.74rem', color: '#0B6B3A', fontWeight: '800' }}>
                 ₹{currentPrice}
@@ -257,7 +266,7 @@ const VegetableCard = ({ vegetable }) => {
                 onClick={handleDecrease}
                 disabled={isMinDisabled}
                 aria-label="Decrease quantity"
-                title={isMinDisabled ? 'Minimum quantity reached' : (soldBy === 'piece' ? 'Decrease by 1 piece' : 'Decrease by 250g')}
+                title={isMinDisabled ? 'Minimum quantity reached' : (soldBy === 'piece' ? 'Decrease by 1 piece' : soldBy === 'dozen' ? 'Decrease by 1 dozen' : 'Decrease by 250g')}
                 style={{
                   width: '32px',
                   height: '32px',
@@ -294,7 +303,7 @@ const VegetableCard = ({ vegetable }) => {
                 onClick={handleIncrease}
                 disabled={isMaxDisabled}
                 aria-label="Increase quantity"
-                title={isMaxDisabled ? 'Maximum stock reached' : (soldBy === 'piece' ? 'Increase by 1 piece' : 'Increase by 250g')}
+                title={isMaxDisabled ? 'Maximum stock reached' : (soldBy === 'piece' ? 'Increase by 1 piece' : soldBy === 'dozen' ? 'Increase by 1 dozen' : 'Increase by 250g')}
                 style={{
                   width: '32px',
                   height: '32px',
@@ -329,7 +338,7 @@ const VegetableCard = ({ vegetable }) => {
               {discountPercent}% OFF
             </span>
             <span style={{ fontSize: '0.72rem', color: '#64748b', fontWeight: '600', marginLeft: 'auto' }}>
-              (₹{price}/{soldBy === 'piece' ? 'pc' : 'kg'})
+              (₹{price}/{soldBy === 'piece' ? 'pc' : soldBy === 'dozen' ? t('product.dozen') : 'kg'})
             </span>
           </div>
 

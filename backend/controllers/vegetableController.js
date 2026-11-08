@@ -102,7 +102,7 @@ exports.addVegetable = async (req, res) => {
         const farmer_id = req.user.id;
         const { vegetable_name, category, description, price, quantity, sold_by } = req.body;
         const image = req.file ? req.file.filename : 'default-vegetable.jpg';
-        const soldByVal = sold_by === 'piece' ? 'piece' : 'weight';
+        const soldByVal = ['piece', 'dozen'].includes(sold_by) ? sold_by : 'weight';
 
         if (!vegetable_name || !category || !price || quantity === undefined) {
             return res.status(400).json({ message: 'Vegetable name, category, price, and quantity are required.' });
@@ -139,7 +139,7 @@ exports.updateVegetable = async (req, res) => {
             }
         }
 
-        const soldByVal = sold_by === 'piece' ? 'piece' : 'weight';
+        const soldByVal = ['piece', 'dozen'].includes(sold_by) ? sold_by : 'weight';
         let sql = `UPDATE vegetables SET vegetable_name = ?, category = ?, description = ?, price = ?, quantity = ?, sold_by = ?`;
         const params = [vegetable_name, category, description, parseFloat(price), parseInt(quantity), soldByVal];
 

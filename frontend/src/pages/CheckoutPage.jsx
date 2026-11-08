@@ -471,7 +471,7 @@ const CheckoutPage = () => {
 
               <div style={{ maxHeight: '220px', overflowY: 'auto', marginBottom: '16px', paddingRight: '4px' }}>
                 {items.map((item) => {
-                  const unit = item.quantity_unit || (item.sold_by === 'piece' ? 'piece' : 'kg');
+                  const unit = item.quantity_unit || (item.sold_by === 'piece' ? 'piece' : item.sold_by === 'dozen' ? 'dozen' : 'kg');
                   const val = item.quantity_value !== undefined ? item.quantity_value : item.quantity;
                   const itemLineTotal = item.item_total !== undefined
                     ? item.item_total
@@ -482,7 +482,7 @@ const CheckoutPage = () => {
                       <div>
                         <div style={{ fontWeight: '800', color: '#0f172a' }}>{tVegName(t, item.vegetable_name)}</div>
                         <span style={{ fontSize: '0.78rem', color: '#64748b' }}>
-                          👨‍🌾 {item.farmer_name} • {val} {unit === 'piece' ? (val > 1 ? 'pcs' : 'pc') : unit}
+                          👨‍🌾 {item.farmer_name} • {val} {unit === 'piece' ? (val > 1 ? 'pcs' : 'pc') : unit === 'dozen' ? (val > 1 ? 'dozens' : 'dozen') : unit}
                         </span>
                       </div>
                       <span style={{ fontWeight: '800', color: '#0B6B3A' }}>

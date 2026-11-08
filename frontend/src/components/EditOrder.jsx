@@ -125,7 +125,7 @@ const EditOrder = ({ order, token, onClose, onUpdated }) => {
               type="number"
               min="0.01"
               step={
-                item.quantity_unit === 'piece' ? '1' :
+              ['piece', 'dozen'].includes(item.quantity_unit) ? '1' :
                 item.quantity_unit === 'g' ? '1' : '0.25'
               }
               value={item.quantity_value}

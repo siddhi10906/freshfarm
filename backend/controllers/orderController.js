@@ -1,4 +1,5 @@
 const db = require('../config/db');
+const { defaultUnit, unitMatchesProduct, stockQuantity, lineAmount } = require('../utils/quantityUnits');
 
 // 1. Create Order (Checkout)
 exports.createOrder = async (req, res) => {
@@ -43,11 +44,15 @@ exports.createOrder = async (req, res) => {
         // Validate stock availability and calculate subtotal
         let subtotal = 0;
         for (const item of cartItems) {
-            const unit = item.quantity_unit || (item.sold_by === 'piece' ? 'piece' : 'kg');
+            const unit = item.quantity_unit || defaultUnit(item.sold_by);
             const val = parseFloat(item.quantity_value) || parseFloat(item.quantity) || 1;
-            const kgEq = unit === 'g' ? val / 1000 : val;
+            if (!unitMatchesProduct(item.sold_by, unit)) {
+                await connection.rollback(); connection.release();
+                return res.status(400).json({ message: `Invalid quantity unit for ${item.vegetable_name}.` });
+            }
+            const kgEq = stockQuantity(unit, val);
             const effectivePrice = item.surplus_listing_id ? Number(item.rescue_price) : Number(item.price);
-            const lineTotal = unit === 'g' ? (effectivePrice * val) / 1000 : effectivePrice * val;
+            const lineTotal = lineAmount(effectivePrice, unit, val);
             const stockAvailable = item.surplus_listing_id ? Number(item.rescue_stock) : Number(item.available_stock);
 
             if (item.surplus_listing_id && (item.rescue_status !== 'active' || new Date(item.rescue_deadline) <= new Date())) {
@@ -57,7 +62,7 @@ exports.createOrder = async (req, res) => {
             if (kgEq > stockAvailable) {
                 await connection.rollback();
                 connection.release();
-                const stockLabel = item.sold_by === 'piece' ? `${stockAvailable} pieces` : `${stockAvailable} kg`;
+                const stockLabel = item.sold_by === 'piece' ? `${stockAvailable} pieces` : item.sold_by === 'dozen' ? `${stockAvailable} dozen` : `${stockAvailable} kg`;
                 return res.status(400).json({
                     message: `${item.surplus_listing_id ? 'Rescue deal stock' : 'Stock'} insufficient for ${item.vegetable_name}. Available: ${stockLabel}.`
                 });
@@ -81,9 +86,9 @@ exports.createOrder = async (req, res) => {
 
         // Insert Order Items & Deduct Stock
         for (const item of cartItems) {
-            const unit = item.quantity_unit || (item.sold_by === 'piece' ? 'piece' : 'kg');
+            const unit = item.quantity_unit || defaultUnit(item.sold_by);
             const val = parseFloat(item.quantity_value) || parseFloat(item.quantity) || 1;
-            const kgEq = unit === 'g' ? val / 1000 : val;
+            const kgEq = stockQuantity(unit, val);
 
             await connection.query(
                 `INSERT INTO order_items (order_id, vegetable_id, quantity, quantity_unit, quantity_value, price, surplus_listing_id, original_price)
@@ -357,7 +362,7 @@ exports.editOrder = async (req, res) => {
             const unit = String(item.quantity_unit || '').toLowerCase();
             const value = Number(item.quantity_value ?? item.quantity);
 
-            if (!['kg', 'g', 'piece'].includes(unit) ||
+            if (!['kg', 'g', 'piece', 'dozen'].includes(unit) ||
                 !Number.isFinite(value) || value <= 0) {
                 await connection.rollback();
                 return res.status(400).json({
@@ -435,17 +440,14 @@ exports.editOrder = async (req, res) => {
 
             const isPiece = vegetable.sold_by === 'piece';
 
-            if ((isPiece && requested.unit !== 'piece') ||
-                (!isPiece && requested.unit === 'piece')) {
+            if (!unitMatchesProduct(vegetable.sold_by, requested.unit)) {
                 await connection.rollback();
                 return res.status(400).json({
                     message: `Invalid quantity unit for ${vegetable.vegetable_name}.`
                 });
             }
 
-            const stockQuantity = requested.unit === 'g'
-                ? requested.value / 1000
-                : requested.value;
+            const requestedStock = stockQuantity(requested.unit, requested.value);
 
             const oldItem = oldItems.find(item => Number(item.vegetable_id) === requested.vegetableId);
             const requestedRescueId = requested.surplus_listing_id ? Number(requested.surplus_listing_id) : null;
@@ -457,9 +459,7 @@ exports.editOrder = async (req, res) => {
             const isRescueItem = Boolean(oldRescueItem && requestedRescueId === Number(oldRescueItem.surplus_listing_id));
             const price = isRescueItem ? Number(oldRescueItem.price) : (oldItem && !oldItem.surplus_listing_id ? Number(oldItem.price) : Number(vegetable.price));
 
-            const lineTotal = requested.unit === 'g'
-                ? (price * requested.value) / 1000
-                : price * requested.value;
+            const lineTotal = lineAmount(price, requested.unit, requested.value);
 
             let rescueListing = null;
             if (isRescueItem) {
@@ -470,18 +470,18 @@ exports.editOrder = async (req, res) => {
                 }
                 const oldRescueQuantity = Number(oldRescueItem.quantity);
                 const availableForThisOrder = Number(rescueListing.quantity_remaining) + oldRescueQuantity;
-                const increasesQuantity = stockQuantity > oldRescueQuantity;
-                if (stockQuantity > availableForThisOrder || (increasesQuantity && (rescueListing.status !== 'active' || new Date(rescueListing.deadline) <= new Date()))) {
+                const increasesQuantity = requestedStock > oldRescueQuantity;
+                if (requestedStock > availableForThisOrder || (increasesQuantity && (rescueListing.status !== 'active' || new Date(rescueListing.deadline) <= new Date()))) {
                     await connection.rollback();
                     return res.status(400).json({ message: `Insufficient active Rescue Deal stock for ${vegetable.vegetable_name}.` });
                 }
             } else {
                 const previousStockDeduction = oldRegularMap.get(requested.vegetableId) || 0;
                 const availableForThisOrder = Number(vegetable.quantity) + previousStockDeduction;
-                if (stockQuantity > availableForThisOrder) {
+                if (requestedStock > availableForThisOrder) {
                     await connection.rollback();
                     return res.status(400).json({
-                        message: `Insufficient stock for ${vegetable.vegetable_name}. Available: ${availableForThisOrder} ${isPiece ? 'pieces' : 'kg'}.`
+                        message: `Insufficient stock for ${vegetable.vegetable_name}. Available: ${availableForThisOrder} ${isPiece ? 'pieces' : vegetable.sold_by === 'dozen' ? 'dozen' : 'kg'}.`
                     });
                 }
             }
@@ -490,7 +490,7 @@ exports.editOrder = async (req, res) => {
 
             updatedItems.push({
                 vegetable_id: requested.vegetableId,
-                quantity: stockQuantity,
+                quantity: requestedStock,
                 quantity_unit: requested.unit,
                 quantity_value: requested.value,
                 price,

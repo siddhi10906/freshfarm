@@ -94,6 +94,11 @@
     "freshest": "Freshest Plucked"
   },
   "product": {
+    "dozen": "dozen",
+    "dozens": "dozens",
+    "quantity": "Quantity",
+    "quantityDozens": "Quantity (Dozens)",
+    "quantityWeight": "Quantity (Weight)",
     "addToCart": "Add to Cart",
     "addedToCart": "Added to Cart!",
     "outOfStock": "Out of Stock",
@@ -111,6 +116,13 @@
     "noProductsFound": "No vegetables found matching your search."
   },
   "vegNames": {
+    "Farm Fresh Cucumbers": "Farm Fresh Cucumbers",
+    "Fresh Green Cabbage": "Fresh Green Cabbage",
+    "Earthy Beetroot": "Earthy Beetroot",
+    "Crisp Red Apples": "Crisp Red Apples",
+    "Fresh Bananas": "Fresh Bananas",
+    "Juicy Oranges": "Juicy Oranges",
+    "Sweet Pomegranates": "Sweet Pomegranates",
     "Green Peas (Matar)": "Green Peas (Matar)",
     "Fresh Cauliflower": "Fresh Cauliflower",
     "Organic Cauliflower": "Organic Cauliflower",

@@ -41,7 +41,7 @@ exports.getCart = async (req, res) => {
 
         let subtotal = 0;
         cartItems.forEach(item => {
-            const unit = item.quantity_unit || (item.sold_by === 'piece' ? 'piece' : 'kg');
+            const unit = item.quantity_unit || (item.sold_by === 'piece' ? 'piece' : item.sold_by === 'dozen' ? 'dozen' : 'kg');
             const val = parseFloat(item.quantity_value) || parseFloat(item.quantity) || 1;
             const activeRescue = item.surplus_listing_id && item.rescue_price != null;
             const { kgEq, itemTotal } = calculateItemPricing(activeRescue ? item.rescue_price : item.price, unit, val);
@@ -81,7 +81,7 @@ exports.addRescueToCart = async (req, res) => {
         const listingId = Number(req.params.listingId);
         const value = Number(req.body.quantity_value ?? req.body.quantity ?? 1);
         const unit = String(req.body.quantity_unit || 'kg').toLowerCase();
-        if (!Number.isFinite(value) || value <= 0 || !['kg', 'g', 'piece'].includes(unit)) {
+        if (!Number.isFinite(value) || value <= 0 || !['kg', 'g', 'piece', 'dozen'].includes(unit)) {
             return res.status(400).json({ message: 'Enter a valid quantity and unit.' });
         }
         const [rows] = await db.query(
@@ -96,7 +96,7 @@ exports.addRescueToCart = async (req, res) => {
         if (!city || !(locality.includes(city) || city.includes(locality))) {
             return res.status(403).json({ message: 'This Rescue Deal is not available in your delivery locality.' });
         }
-        if ((listing.sold_by === 'piece') !== (unit === 'piece')) return res.status(400).json({ message: 'Quantity unit does not match this product.' });
+        if ((listing.sold_by === 'piece' && unit !== 'piece') || (listing.sold_by === 'dozen' && unit !== 'dozen') || (!['piece', 'dozen'].includes(listing.sold_by) && !['kg', 'g'].includes(unit))) return res.status(400).json({ message: 'Quantity unit does not match this product.' });
         const stockQty = unit === 'g' ? value / 1000 : value;
         if (stockQty > Number(listing.quantity_remaining)) return res.status(400).json({ message: 'Requested amount exceeds rescue deal stock.' });
         const [existing] = await db.query('SELECT cart_id, surplus_listing_id, quantity_value FROM cart WHERE customer_id=? AND vegetable_id=?', [customer_id, listing.vegetable_id]);
@@ -131,8 +131,12 @@ exports.addToCart = async (req, res) => {
 
         const availableStock = parseFloat(veg[0].quantity);
         const soldBy = veg[0].sold_by || 'weight';
-        const unit = quantity_unit || (soldBy === 'piece' ? 'piece' : 'kg');
+        const unit = quantity_unit || (soldBy === 'piece' ? 'piece' : soldBy === 'dozen' ? 'dozen' : 'kg');
         const val = parseFloat(quantity_value) || parseFloat(quantity) || 1;
+
+        if ((soldBy === 'piece' && unit !== 'piece') || (soldBy === 'dozen' && unit !== 'dozen') || (!['piece', 'dozen'].includes(soldBy) && !['kg', 'g'].includes(unit))) {
+            return res.status(400).json({ message: 'Quantity unit does not match this product.' });
+        }
 
         const { kgEq } = calculateItemPricing(veg[0].price, unit, val);
 
@@ -148,7 +152,7 @@ exports.addToCart = async (req, res) => {
             const { kgEq: newKgEq } = calculateItemPricing(veg[0].price, unit, newTotalVal);
 
             if (newKgEq > availableStock) {
-                const stockLabel = soldBy === 'piece' ? `${availableStock} pieces` : `${availableStock} kg`;
+                const stockLabel = soldBy === 'piece' ? `${availableStock} pieces` : soldBy === 'dozen' ? `${availableStock} dozen` : `${availableStock} kg`;
                 return res.status(400).json({ message: `Cannot add more than available stock (${stockLabel} available).` });
             }
 
@@ -159,7 +163,7 @@ exports.addToCart = async (req, res) => {
             return res.status(200).json({ message: 'Cart quantity updated.' });
         } else {
             if (kgEq > availableStock) {
-                const stockLabel = soldBy === 'piece' ? `${availableStock} pieces` : `${availableStock} kg`;
+                const stockLabel = soldBy === 'piece' ? `${availableStock} pieces` : soldBy === 'dozen' ? `${availableStock} dozen` : `${availableStock} kg`;
                 return res.status(400).json({ message: `Cannot add more than available stock (${stockLabel} available).` });
             }
 
@@ -197,7 +201,10 @@ exports.updateCartQuantity = async (req, res) => {
         }
 
         const item = rows[0];
-        const unit = quantity_unit || item.quantity_unit || (item.sold_by === 'piece' ? 'piece' : 'kg');
+        const unit = quantity_unit || item.quantity_unit || (item.sold_by === 'piece' ? 'piece' : item.sold_by === 'dozen' ? 'dozen' : 'kg');
+        if ((item.sold_by === 'piece' && unit !== 'piece') || (item.sold_by === 'dozen' && unit !== 'dozen') || (!['piece', 'dozen'].includes(item.sold_by) && !['kg', 'g'].includes(unit))) {
+            return res.status(400).json({ message: 'Quantity unit does not match this product.' });
+        }
         const val = parseFloat(quantity_value !== undefined ? quantity_value : quantity);
 
         if (val <= 0) {
@@ -212,7 +219,7 @@ exports.updateCartQuantity = async (req, res) => {
         const availableStock = parseFloat(item.surplus_listing_id ? item.rescue_stock : item.available_stock);
 
         if (kgEq > availableStock) {
-            const stockLabel = item.sold_by === 'piece' ? `${availableStock} pieces` : `${availableStock} kg`;
+            const stockLabel = item.sold_by === 'piece' ? `${availableStock} pieces` : item.sold_by === 'dozen' ? `${availableStock} dozen` : `${availableStock} kg`;
             return res.status(400).json({ message: `Quantity exceeds available stock (${stockLabel} available).` });
         }
 
