@@ -82,22 +82,42 @@ exports.askGreenyAI = async (req, res) => {
   try {
     const liveContext = await getLiveDatabaseContext(message);
     const ai = new GoogleGenAI({ apiKey });
-    const response = await ai.models.generateContent({
-      // Keep this configurable so the deployed model can be changed without a code edit.
-      model: process.env.GEMINI_MODEL || 'gemini-3.8-flash',
-      contents: cleanHistory(req.body.history, message),
-      config: {
-        systemInstruction: liveContext
-          ? `${SYSTEM_INSTRUCTION}\n\nLive product catalog (use only when relevant):\n${liveContext}`
-          : SYSTEM_INSTRUCTION,
-        temperature: 0.7,
-        maxOutputTokens: 1200
-      }
-    });
+    const preferredModel = process.env.GEMINI_MODEL || 'gemini-3.8-flash';
+    const models = [...new Set([
+      preferredModel,
+      'gemini-3.7-flash',
+      'gemini-3.6-flash',
+      'gemini-3.5-flash-lite'
+    ])];
+    const contents = cleanHistory(req.body.history, message);
+    const config = {
+      systemInstruction: liveContext
+        ? `${SYSTEM_INSTRUCTION}\n\nLive product catalog (use only when relevant):\n${liveContext}`
+        : SYSTEM_INSTRUCTION,
+      temperature: 0.7,
+      maxOutputTokens: 1200
+    };
+    let lastError;
 
-    const reply = response.text?.trim();
-    if (!reply) throw new Error('Gemini returned an empty response.');
-    return res.json({ success: true, reply });
+    for (const model of models) {
+      try {
+        const response = await ai.models.generateContent({ model, contents, config });
+        const reply = response.text?.trim();
+        if (!reply) throw new Error(`Gemini model ${model} returned an empty response.`);
+        return res.json({ success: true, reply });
+      } catch (error) {
+        lastError = error;
+        const status = error.status || error.statusCode || (() => {
+          try { return JSON.parse(error.message)?.error?.code; } catch { return undefined; }
+        })();
+        console.error(`Greeny AI model ${model} failed:`, { status, message: error.message });
+
+        // Try the next supported model when this model is unavailable or temporarily rate-limited.
+        if (![404, 429, 500, 502, 503, 504].includes(Number(status))) throw error;
+      }
+    }
+
+    throw lastError || new Error('All configured Gemini models are unavailable.');
   } catch (error) {
     // Keep diagnostics useful without logging API keys or customer message contents.
     console.error('Greeny AI request failed:', {
