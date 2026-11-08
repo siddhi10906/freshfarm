@@ -247,8 +247,8 @@ const Navbar = () => {
             <Link to="/vegetables" style={{ color: isActive('/vegetables') ? '#0B6B3A' : '#475569', borderBottom: isActive('/vegetables') ? '2px solid #0B6B3A' : 'none', paddingBottom: '4px' }}>
               {t('nav.vegetables')}
             </Link>
-            {user?.role !== 'ngo' && <Link to="/rescue-deals" style={{ color: isActive('/rescue-deals') ? '#0B6B3A' : '#475569', borderBottom: isActive('/rescue-deals') ? '2px solid #0B6B3A' : 'none', paddingBottom: '4px' }}>Rescue Deals</Link>}
-            <Link to="/ngo/rescue" style={{ color: isActive('/ngo/rescue') ? '#0B6B3A' : '#475569', paddingBottom: '4px' }}>NGO / Kitchen</Link>
+            {user?.role !== 'ngo' && <Link to="/rescue-deals" style={{ color: isActive('/rescue-deals') ? '#0B6B3A' : '#475569', borderBottom: isActive('/rescue-deals') ? '2px solid #0B6B3A' : 'none', paddingBottom: '4px' }}>{t('nav.rescueDeals')}</Link>}
+            <Link to="/ngo/rescue" style={{ color: isActive('/ngo/rescue') ? '#0B6B3A' : '#475569', paddingBottom: '4px' }}>{t('nav.ngoKitchen')}</Link>
             <Link to="/about" style={{ color: isActive('/about') ? '#0B6B3A' : '#475569', borderBottom: isActive('/about') ? '2px solid #0B6B3A' : 'none', paddingBottom: '4px' }}>
               {t('nav.about')}
             </Link>
