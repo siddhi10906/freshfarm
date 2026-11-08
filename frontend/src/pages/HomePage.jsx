@@ -50,16 +50,16 @@ const HomePage = () => {
       village: 'Baramati'
     },
     {
-      vegetable_id: 4,
-      vegetable_name: 'Organic Cauliflower',
+      vegetable_id: 7,
+      vegetable_name: 'Fresh Cauliflower',
       category: 'Organic',
       weight: '1 piece',
-      price: '35.00',
+      price: '45.00',
       originalPrice: '45',
       discount: '22% OFF',
       quantity: 60,
       image: '/assets/images/produce/cauliflower.jpg',
-      farmer_name: 'Patil Farm',
+      farmer_name: 'Ramesh Patil',
       village: 'Manchar'
     },
     {
